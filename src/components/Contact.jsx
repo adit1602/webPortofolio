@@ -5,6 +5,7 @@ import { FaDiscord, FaEnvelope, FaGithub, FaInstagram, FaWhatsapp, FaYoutube } f
 const Contact = () => {
   return (
     <section id="contact" className="py-20 bg-gray-900 dark:bg-gray-900">
+    <section data-aos="zoom-in">
       <div className="container mx-auto px-4">
         <motion.div
           initial={{ opacity: 0, y: 50 }}
@@ -72,6 +73,7 @@ const Contact = () => {
           </div>
         </motion.div>
       </div>
+    </section>
     </section>
   );
 };

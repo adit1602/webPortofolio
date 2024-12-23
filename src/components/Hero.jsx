@@ -40,7 +40,8 @@ const Hero = () => {
   const description = "A passionate teenager exploring the world of technology, software development, and innovation.";
 
   return (
-    <section id="home" className="relative min-h-screen bg-black overflow-hidden">
+    <section id="home" className="relative min-h-screen bg-black overflow-hidden" data-aos="fade"
+    data-aos-duration="500">
       <div className="container mx-auto px-4 py-16 relative z-10">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center min-h-screen">
           {/* Left Content - Added pl-10 to move content to the right */}

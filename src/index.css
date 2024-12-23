@@ -8,6 +8,7 @@ body, html {
   overflow-x: hidden;
   scroll-behavior: smooth;
   scrollbar-width: thin;
+  background: black;
 }
 
 .background {
