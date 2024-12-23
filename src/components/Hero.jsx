@@ -84,7 +84,7 @@ const Hero = () => {
               className="w-64 h-64 md:w-80 md:h-80 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center"
             >
               <img 
-                src="/src/components/images/icon.png"
+                src='images/icon.png'
                 alt="Haikal Mabrur"
                 className="w-full h-full object-cover"
               />

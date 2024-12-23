@@ -95,7 +95,7 @@ const Navbar = () => {
               }}
             >
               <motion.img
-                src="/src/components/images/icon.png"
+                src='images/icon.png'
                 width="50px" // Slightly larger icon
                 alt="Logo"
                 animate={{

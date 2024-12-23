@@ -2,6 +2,10 @@ import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { FaExternalLinkAlt, FaTimes } from 'react-icons/fa';
 
+import projectPictPortov1 from '../../images/1stportofolio.png';
+import projectPictPortov2 from '../../images/screenshot-portofolio.png';
+import projectPictNaturalSMP from '../../images/naturalsmp-screenshot.png';
+
 const ProjectCard = ({ img, title, description, tags, link }) => {
   const [isPreviewOpen, setIsPreviewOpen] = useState(false);
 
@@ -108,21 +112,21 @@ const ProjectCard = ({ img, title, description, tags, link }) => {
 const Projects = () => {
   const projects = [
     {
-      img: "/src/components/images/1stportofolio.png", // Add your image paths
+      img: `${projectPictPortov1}`, // Add your image paths
       title: "My First Portfolio Website",
       description: "My first modern web portfolio built with HTML, CSS, and little JavaScript",
       tags: ["HTML", "CSS", "JavaScript"],
       link: "https://v1.haikaldev.my.id" // Add actual project links
     },
     {
-      img: "/src/components/images/naturalsmp-screenshot.png",
+      img: `${projectPictNaturalSMP}`,
       title: "Natural Survival Multiplayer",
       description: "An economy Minecraft server from Indonesia and for Asia",
       tags: ["Paper", "Bungeecord", "SMP", "RPG", "SlimeFun"],
       link: "https://web.naturalsmp.xyz"
     },
     {
-      img: "/src/components/images/screenshot-portofolio.png",
+      img: `${projectPictPortov2}`,
       title: "This Portfolio Website",
       description: "My recent Portfolio Website built with AI",
       tags: ["JSX", "CSS", "HTML"],
