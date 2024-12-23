@@ -1,6 +1,7 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { FaDiscord, FaEnvelope, FaGithub, FaInstagram, FaWhatsapp, FaYoutube } from 'react-icons/fa'; // Importing icons
+import { FaDiscord, FaEnvelope, FaGithub, FaInstagram, FaWhatsapp, FaYoutube } from 'react-icons/fa';
+import { SiX } from 'react-icons/si';
 
 const Contact = () => {
   return (
@@ -71,6 +72,9 @@ const Contact = () => {
               </li>
               <li className="flex items-center space-x-2 text-gray-300 hover:text-primary-600 transition duration-300">
                 <FaGithub /><a target="_blank" href="https://github.com/AnakTentara">GitHub</a>
+              </li>
+              <li className="flex items-center space-x-2 text-gray-300 hover:text-primary-600 transition duration-300">
+                <SiX /><a target="_blank" href="https://x.com/AnakTentara2">Haikaru (X)</a>
               </li>
             </ul>
           </div>

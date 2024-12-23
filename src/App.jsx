@@ -10,7 +10,7 @@ import iconGradient from '../images/icon-bggradient.png'
 import projectPictPortov1 from '../images/1stportofolio.png';
 import projectPictPortov2 from '../images/screenshot-portofolio.png';
 import projectPictNaturalSMP from '../images/naturalsmp-screenshot.png';
-
+import Footer from './components/Footer';
 
 function App() {
   return (
@@ -20,6 +20,7 @@ function App() {
       <About />
       <Projects />
       <Contact />
+      <Footer />
     </div>
   );
 }
