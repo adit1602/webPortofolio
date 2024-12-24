@@ -52,7 +52,7 @@ const Footer = () => {
               <img 
                 src='images/icon.png' 
                 alt="Haikal Mabrur Logo" 
-                className="w-16 h-16 rounded-full"
+                className="w-16 h-16"
               />
               <h2 className="text-2xl font-bold">Haikal Mabrur</h2>
             </motion.div>
