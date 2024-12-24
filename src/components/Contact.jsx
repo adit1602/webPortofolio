@@ -11,12 +11,12 @@ const Contact = () => {
         <motion.div
           initial={{ opacity: 0, y: 50 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
+          viewport={{ once: false }}
           className="flex flex-col md:flex-row gap-8"
         >
           {/* Left Side: Contact */}
-          <div className="flex-1">
-            <div className="bg-gradient-to-r from-gray-700 to-gray-800 rounded-2xl p-10 shadow-xl transition-transform transform hover:scale-105">
+          <motion.div whileTap={{ scale: 0.98 }} whileHover={{ scale: 1.04 }} className="flex-1">
+            <div className="bg-gradient-to-r from-gray-700 to-gray-800 rounded-2xl p-10 shadow-xl transition-transform transform">
               <h2 className="text-5xl font-extrabold text-center text-white mb-6">Mail Me!</h2>
               <a
                 href="mailto:me@haikaldev.my.id"
@@ -47,17 +47,58 @@ const Contact = () => {
                 haikalmabrur
               </a>
             </div>
-          </div>
+          </motion.div>
 
           {/* Right Side: Icon and Social Media Links */}
-          <div className="bg-gray-800 rounded-lg p-8 shadow-lg text-center transition-transform transform hover:scale-105">
-            <img
+          <motion.div whileTap={{ scale: 0.98 }} whileHover={{ scale: 1.04 }} className="bg-gray-800 rounded-lg p-8 shadow-lg text-center transition-transform transform hover:scale-105">
+            <motion.img
               src='images/icon.png'
               alt="Haikal Mabrur"
-              className="w-24 h-24 mx-auto mb-4"
+              whileHover={{ 
+                scale: 1.1,
+                rotate: [5, -5, 5, -5, 5],
+                transition: {
+                  duration: 0.5,
+                  type: "spring",
+                  stiffness: 300,
+                  damping: 10
+                }
+              }}
+              whileTap={{ scale: 0.98 }}
+              className="w-24 h-24 mx-auto mb-4 cursor-pointer"
             />
-            <h3 className="text-xl font-bold text-white mb-4">Connect with Me</h3>
-            <ul className="flex flex-col space-y-2">
+            <motion.h3 
+              className="text-xl font-bold text-white mb-4"
+              initial={{ scale: 1 }}
+              whileHover={{ 
+                scale: 1.1,
+                transition: {
+                  duration: 0.3,
+                  type: "spring",
+                  stiffness: 300
+                }
+              }}
+              whileTap={{ scale: 0.98 }}
+            >
+              <span className='pl-3 pr-3 pb-1 bg-black rounded-full'>
+                <motion.span 
+                  className='bg-gradient-to-r from-pink-600 via-purple-400 to-blue-500 bg-clip-text text-transparent'
+                  initial={{ scale: 1 }}
+                  whileHover={{ 
+                    scale: 1.2,
+                    transition: {
+                      duration: 0.3,
+                      type: "spring",
+                      stiffness: 300
+                    }
+                  }}
+                  whileTap={{ scale: 0.98 }}
+                >
+                  Connect
+                </motion.span>
+                </span> with me
+            </motion.h3>
+            <motion.ul whileTap={{ scale: 0.98 }} whileHover={{ scale: 1.02 }} className="flex flex-col space-y-2">
               <li className="flex items-center space-x-2 text-gray-300 hover:text-primary-600 transition duration-300">
                 <FaDiscord /><a target="_blank" href="https://discord.com/users/804720825109315605">haikalmabrur</a>
               </li>
@@ -76,8 +117,8 @@ const Contact = () => {
               <li className="flex items-center space-x-2 text-gray-300 hover:text-primary-600 transition duration-300">
                 <SiX /><a target="_blank" href="https://x.com/AnakTentara2">Haikaru (X)</a>
               </li>
-            </ul>
-          </div>
+            </motion.ul>
+          </motion.div>
         </motion.div>
       </div>
     </section>

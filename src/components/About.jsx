@@ -58,8 +58,8 @@ const About = () => {
   };
 
   return (
-    <section id="about" className="py-20 bg-white dark:bg-gray-900" data-aos="slide-right">
-      <div className="container mx-auto px-4">
+    <section id="about" className="py-20 bg-white dark:bg-gray-900">
+      <div className="container mx-auto px-4" data-aos="slide-right">
         <motion.div
           initial={{ opacity: 0, y: 50 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -75,7 +75,7 @@ const About = () => {
             onHoverEnd={() => setTitleHover(false)}
             className="text-4xl font-bold text-gray-800 dark:text-white mb-8 inline-block relative"
           >
-            About Me
+             <strong className='mb:16 font-bold bg-gradient-to-r from-blue-400 via-purple-600 to-pink-500 bg-clip-text text-transparent uppercase tracking-wider'>About Me</strong>
             <AnimatePresence>
               {titleHover && (
                 <motion.span 
@@ -92,9 +92,9 @@ const About = () => {
             </AnimatePresence>
           </motion.h2>
 
-          <p className="text-lg text-gray-600 dark:text-gray-300 mb-6">
+          <motion.p whileTap={{ scale: 0.98 }} whileHover={{ scale: 1.02 }} className="text-lg text-gray-600 dark:text-gray-300 mb-6">
             I am a passionate teenager with a keen interest in technology and software development. I have experience in creating and managing Minecraft servers, as well as developing SA:MP servers. Additionally, I have built Discord and WhatsApp bots, and I am proficient in deploying applications on platforms such as Azure. As an avid gamer, I continuously seek to enhance my skills and knowledge in the tech field.
-          </p>
+          </motion.p>
           
           {/* Personal Info Grid */}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mt-12">

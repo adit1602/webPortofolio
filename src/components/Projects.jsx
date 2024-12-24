@@ -29,7 +29,6 @@ const ProjectCard = ({ img, title, description, tags, link }) => {
         whileTap={{ scale: 0.98 }}
         onClick={handleOpenPreview}
         className="bg-gray-700 p-6 rounded-xl shadow-lg cursor-pointer"
-        
       >
         <div className="h-48 bg-gray-800 rounded-lg mb-4 overflow-hidden">
           <img 
@@ -81,7 +80,7 @@ const ProjectCard = ({ img, title, description, tags, link }) => {
               <div className="p-4 text-white">
                 {/* Preview Section */}
                 <div className="w-full h-[360px] bg-gray-100 dark:bg-gray-700 rounded-lg mb-4 overflow-hidden">
-                  <iframe 
+                  <motion.iframe 
                     src={link} 
                     title={title}
                     className="w-full h-full"
@@ -92,8 +91,6 @@ const ProjectCard = ({ img, title, description, tags, link }) => {
                 {/* Action Buttons */}
                 <div className="flex justify-end space-x-4 mt-4">
                   <motion.button
-                    whileHover={{ scale: 1.05 }}
-                    whileTap={{ scale: 0.95 }}
                     onClick={handleOpenInNewTab}
                     className="flex items-center bg-primary-600 text-white px-4 py-2 rounded-lg hover:bg-primary-700 transition"
                   >
@@ -110,13 +107,15 @@ const ProjectCard = ({ img, title, description, tags, link }) => {
 };
 
 const Projects = () => {
+  const [titleHover, setTitleHover] = useState(false);
+
   const projects = [
     {
-      img: `${projectPictPortov1}`, // Add your image paths
+      img: `${projectPictPortov1}`,
       title: "My First Portfolio Website",
       description: "My first modern web portfolio built with HTML, CSS, and little JavaScript",
       tags: ["HTML", "CSS", "JavaScript"],
-      link: "https://v1.haikaldev.my.id" // Add actual project links
+      link: "https://v1.haikaldev.my.id"
     },
     {
       img: `${projectPictNaturalSMP}`,
@@ -137,15 +136,47 @@ const Projects = () => {
   return (
     <section id="projects" className='py-20 bg-gray-800'>
       <section data-aos="fade-left">
-      <div className="container mx-auto px-4">
-        <h2 className="text-4xl font-bold text-center text-white mb-12">Projects</h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {projects.map((project, index) => (
-            <ProjectCard key={index} {...project} />
-          ))}
+        <div className="container mx-auto px-4">
+          {/* Animated Title */}
+          <motion.h2 
+            initial={{ x: 0 }}
+            animate={{ 
+              x: titleHover ? [-10, 10, -10, 10, 0] : 0,
+              transition: {
+                duration: 0.5,
+                type: "spring",
+                stiffness: 300,
+                damping: 10
+              }
+            }}
+            onMouseEnter={() => setTitleHover(true)}
+            onMouseLeave={() => setTitleHover(false)}
+            className="text-4xl font-bold text-center text-white mb-12 inline-block relative"
+          >
+            <strong className='mb:16 font-bold bg-gradient-to-r from-blue-400 via-purple-600 to-pink-500 bg-clip-text text-transparent uppercase tracking-wider'>Projects</strong>
+            <AnimatePresence>
+              {titleHover && (
+                <motion.span 
+                  key="emoji"
+                  initial={{ opacity: 0, x: 10, scale: 0.5 }}
+                  animate={{ opacity: 1, x: 0, scale: 1 }}
+                  exit={{ opacity: 0, x: 10, scale: 0.5 }}
+                  transition={{ type: "spring", stiffness: 300, damping: 20 }}
+                  className="absolute inline-block ml-2 text-primary-600 dark:text-primary-400"
+                >
+                  💻
+                </motion.span>
+              )}
+            </AnimatePresence>
+          </motion.h2>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {projects.map((project, index) => (
+              <ProjectCard key={index} {...project} />
+            ))}
+          </div>
         </div>
-      </div>
-    </section>
+      </section>
     </section>
   );
 };
