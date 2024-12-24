@@ -95,7 +95,7 @@ const Navbar = () => {
               }}
             >
               <motion.img
-                src='images/icon.png'
+                src='images/icon-bggradient.png'
                 width="50px" // Slightly larger icon
                 alt="Logo"
                 animate={{
@@ -191,7 +191,6 @@ const Navbar = () => {
   );
 };
 
-// NavLinks Component
 const NavLinks = ({ activeSection, handleScrollTo, isMobile = false }) => {
   const navLinks = [
     { id: 'home', label: 'Home' },
@@ -215,16 +214,21 @@ const NavLinks = ({ activeSection, handleScrollTo, isMobile = false }) => {
         transition: {
           delay: isMobile ? index * 0.1 : 0,
           type: "spring",
-          stiffness: 300,
-          damping: 20
+          stiffness: 200,  // Reduced stiffness for slower animation
+          damping: 15      // Reduced damping for more gentle movement
         }
       }}
-      whileHover={{ scale: 1.05 }}
-      whileTap={{ scale: 0.95 }}
+      whileHover={{ 
+        scale: 1.03,  // Slightly reduced scale
+        transition: {
+          duration: 0.3  // Slower hover animation
+        }
+      }}
+      whileTap={{ scale: 0.97 }}
       className={`
         ${isMobile
           ? "text-3xl font-bold text-gray-800 dark:text-white"
-          : "text-gray-600 dark:text-gray-300 hover:text-primary-600 dark:hover:text-primary-400 transition-colors duration-300 relative group font-medium"
+          : "text-gray-600 dark:text-gray-300 hover:text-primary-600 dark:hover:text-primary-400 transition-colors duration-500 relative group font-medium"
         }
         ${!isMobile && (activeSection === link.id
           ? 'text-primary-600 dark:text-primary-400'
@@ -234,16 +238,33 @@ const NavLinks = ({ activeSection, handleScrollTo, isMobile = false }) => {
     >
       {link.label}
       {!isMobile && (
-        <motion.span
-          layoutId="underline"
-          className={`
-            absolute bottom-0 left-0 h-0.5 bg-primary-600 dark:bg-primary-400 transition-all duration-300
-            ${activeSection === link.id ? 'w-full' : 'w-0'} group-hover:w-full
-          `}
-        />
+        <>
+          <motion.span
+            layoutId={`underline-${link.id}`}
+            className={`
+              absolute bottom-0 left-0 h-0.5 bg-primary-600 dark:bg-primary-400 transition-all duration-500
+              ${activeSection === link.id ? 'w-full' : 'w-0'} group-hover:w-full
+            `}
+            transition={{
+              type: "spring",
+              stiffness: 100,  // Slower underline animation
+              damping: 10
+            }}
+          />
+          {activeSection === link.id && (
+            <motion.span
+              layoutId={`active-indicator-${link.id}`}
+              className="absolute bottom-0 left-0 h-0.5 bg-primary-600 dark:bg-primary-400 w-full"
+              transition={{
+                type: "spring",
+                stiffness: 100,
+                damping: 10
+              }}
+            />
+          )}
+        </>
       )}
     </motion.a>
   ));
 };
-
 export default Navbar;

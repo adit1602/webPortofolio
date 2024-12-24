@@ -11,6 +11,10 @@ body, html {
   background: black;
 }
 
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+
 .background {
   position: absolute;
   top: 0;
