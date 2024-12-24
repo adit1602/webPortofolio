@@ -96,12 +96,20 @@ const Navbar = () => {
             >
               <motion.img
                 src='images/icon-bggradient.png'
-                width="50px" // Slightly larger icon
+                width="50px"
                 alt="Logo"
                 animate={{
                   rotate: 0,
                   scale: 1,
                   transition: { duration: 0.1 }
+                }}
+                whileTap={{
+                  rotate: 375,
+                  scale: 1.2,
+                  transition: {
+                    duration: 0.1,
+                    ease: "easeInOut"
+                  }
                 }}
                 whileHover={{
                   rotate: 375,
@@ -218,7 +226,7 @@ const NavLinks = ({ activeSection, handleScrollTo, isMobile = false }) => {
           damping: 15      // Reduced damping for more gentle movement
         }
       }}
-      whileHover={{ 
+      whileHover={{
         scale: 1.03,  // Slightly reduced scale
         transition: {
           duration: 0.3  // Slower hover animation

@@ -5,21 +5,31 @@ const About = () => {
   const [titleHover, setTitleHover] = useState(false);
   // Hover animation variant
   const cardVariants = {
-    initial: { 
+    initial: {
       scale: 1,
       rotate: 0,
       boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)'
     },
-    hover: { 
+    hover: {
       scale: 1.05,
       rotate: 1,
       boxShadow: '0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)'
-    }
+    },
+    tap: {
+      scale: 0.95,
+      rotate: -5,
+      transition: {
+        duration: 0.5,
+        type: "spring",
+        stiffness: 300,
+        damping: 10
+      }
+    },
   };
 
   // Title hover animation
   const titleVariants = {
-    initial: { 
+    initial: {
       x: 0,
       transition: {
         type: "spring",
@@ -35,18 +45,18 @@ const About = () => {
         stiffness: 300,
         damping: 10
       }
-    }
+    },
   };
 
   // Emoji animation
   const emojiVariants = {
-    initial: { 
-      opacity: 0, 
+    initial: {
+      opacity: 0,
       x: 10,
       scale: 0.5
     },
     hover: {
-      opacity: 1, 
+      opacity: 1,
       x: 0,
       scale: 1,
       transition: {
@@ -66,16 +76,23 @@ const About = () => {
           viewport={{ once: true }}
           className="max-w-3xl mx-auto text-center"
         >
-          {/* About Me Title with Interactive Animation */}
+          {/* Animated Title */}
           <motion.h2 
-            variants={titleVariants}
-            initial="initial"
-            animate={titleHover ? "hover" : "initial"}
-            onHoverStart={() => setTitleHover(true)}
-            onHoverEnd={() => setTitleHover(false)}
-            className="text-4xl font-bold text-gray-800 dark:text-white mb-8 inline-block relative"
+            initial={{ x: 0 }}
+            animate={{ 
+              x: titleHover ? [-10, 10, -10, 10, 0] : 0,
+              transition: {
+                duration: 0.5,
+                type: "spring",
+                stiffness: 300,
+                damping: 10
+              }
+            }}
+            onMouseEnter={() => setTitleHover(true)}
+            onMouseLeave={() => setTitleHover(false)}
+            className="text-4xl font-bold text-center text-white mb-12 inline-block relative"
           >
-             <strong className='mb:16 font-bold bg-gradient-to-r from-blue-400 via-purple-600 to-pink-500 bg-clip-text text-transparent uppercase tracking-wider'>About Me</strong>
+            <strong className='mb:16 font-bold bg-gradient-to-r from-blue-400 via-purple-600 to-pink-500 bg-clip-text text-transparent uppercase tracking-wider'>About Me</strong>
             <AnimatePresence>
               {titleHover && (
                 <motion.span 
@@ -86,7 +103,7 @@ const About = () => {
                   transition={{ type: "spring", stiffness: 300, damping: 20 }}
                   className="absolute inline-block ml-2 text-primary-600 dark:text-primary-400"
                 >
-                  👋
+                  👋🏻
                 </motion.span>
               )}
             </AnimatePresence>
@@ -95,7 +112,7 @@ const About = () => {
           <motion.p whileTap={{ scale: 0.98 }} whileHover={{ scale: 1.02 }} className="text-lg text-gray-600 dark:text-gray-300 mb-6">
             I am a passionate teenager with a keen interest in technology and software development. I have experience in creating and managing Minecraft servers, as well as developing SA:MP servers. Additionally, I have built Discord and WhatsApp bots, and I am proficient in deploying applications on platforms such as Azure. As an avid gamer, I continuously seek to enhance my skills and knowledge in the tech field.
           </motion.p>
-          
+
           {/* Personal Info Grid */}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mt-12">
             {[
@@ -104,12 +121,12 @@ const About = () => {
               { title: "2008", subtitle: "Age" },
               { title: "Indonesia", subtitle: "Nationality" }
             ].map((item, index) => (
-              <motion.div 
+              <motion.div
                 key={index}
                 variants={cardVariants}
                 initial="initial"
                 whileHover="hover"
-                whileTap={{ scale: 0.98 }}
+                whileTap="tap"
                 className="p-4 bg-gray-100 dark:bg-gray-800 rounded-lg cursor-pointer"
               >
                 <h3 className="font-bold text-xl text-gray-800 dark:text-white">
@@ -123,11 +140,11 @@ const About = () => {
           </div>
 
           {/* Email Card with Hover */}
-          <motion.div 
+          <motion.div
             variants={cardVariants}
             initial="initial"
             whileHover="hover"
-            whileTap={{ scale: 0.98 }}
+            whileTap="tap"
             className="mt-12 p-4 bg-gray-100 dark:bg-gray-800 rounded-lg cursor-pointer"
           >
             <h3 className="font-bold text-xl text-gray-800 dark:text-white">
@@ -144,10 +161,10 @@ const About = () => {
               { title: "JavaScript", subtitle: "Language" },
               { title: "C++/C#", subtitle: "Language" }
             ].map((item, index) => (
-              <motion.div 
+              <motion.div
                 key={index}
                 variants={cardVariants}
-                whileTap={{ scale: 0.98 }}
+                whileTap="tap"
                 initial="initial"
                 whileHover="hover"
                 className="p-4 bg-gray-100 dark:bg-gray-800 rounded-lg cursor-pointer"
@@ -163,11 +180,11 @@ const About = () => {
           </div>
 
           {/* Tags Card with Hover */}
-          <motion.div 
+          <motion.div
             variants={cardVariants}
             initial="initial"
             whileHover="hover"
-            whileTap={{ scale: 0.98 }}
+            whileTap="tap"
             className="mt-12 p-4 bg-gray-100 dark:bg-gray-800 rounded-lg cursor-pointer"
           >
             <h3 className="font-bold text-xl text-gray-800 dark:text-white">

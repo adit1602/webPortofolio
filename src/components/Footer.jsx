@@ -46,7 +46,15 @@ const Footer = () => {
           {/* Logo and Description */}
           <div>
             <motion.div
-              whileTap={{ scale: 0.98 }} whileHover={{ scale: 1.02 }}
+              whileTap={{ 
+                scale: 1.05,
+                rotate: [0, 5, -5, 1],
+                transition: {
+                  duration: 0.3,
+                  type: "spring",
+                  stiffness: 300
+                }
+              }}
               className="flex items-center space-x-4 mb-4"
             >
               <motion.img 
@@ -54,8 +62,9 @@ const Footer = () => {
                 alt="Haikal Mabrur Logo" 
                 className="w-16 h-16"
                 whileHover={{ rotate: 5 }}
+                whileTap={{ rotate: 375 }}
               />
-              <motion.h2 whileTap={{ scale: 0.98 }} whileHover={{ scale: 1.05 }} className="text-2xl font-bold">Haikal Mabrur</motion.h2>
+              <motion.h2 whileTap={{ scale: 0.98, rotate: 5  }} whileHover={{ scale: 1.05, rotate: -5 }} className="text-2xl font-bold">Haikal Mabrur</motion.h2>
             </motion.div>
             <motion.p whileTap={{ scale: 0.98 }} whileHover={{ scale: 1.02 }} className="text-gray-400">
               A passionate teenager exploring technology, software development, and innovation.

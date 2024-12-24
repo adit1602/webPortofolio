@@ -64,7 +64,15 @@ const Contact = () => {
                   damping: 10
                 }
               }}
-              whileTap={{ scale: 0.98 }}
+              whileTap={{ 
+                scale: 1.05,
+                rotate: [0, 5, -5, 3],
+                transition: {
+                  duration: 0.3,
+                  type: "spring",
+                  stiffness: 300
+                }
+              }}
               className="w-24 h-24 mx-auto mb-4 cursor-pointer"
             />
             <motion.h3 
@@ -92,7 +100,6 @@ const Contact = () => {
                       stiffness: 300
                     }
                   }}
-                  whileTap={{ scale: 0.98 }}
                 >
                   Connect
                 </motion.span>

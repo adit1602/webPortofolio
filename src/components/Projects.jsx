@@ -26,7 +26,7 @@ const ProjectCard = ({ img, title, description, tags, link }) => {
     <section>
       <motion.div 
         whileHover={{ y: -10 }}
-        whileTap={{ scale: 0.98 }}
+        whileTap={{ scale: 0.98, y: -10 }}
         onClick={handleOpenPreview}
         className="bg-gray-700 p-6 rounded-xl shadow-lg cursor-pointer"
       >

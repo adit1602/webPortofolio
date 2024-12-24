@@ -1,6 +1,6 @@
 {
   "name": "portofolio-v2",
-  "version": "2.0.5",
+  "version": "2.0.6",
   "description": "Portofolio Haikal Mabrur Versi 2.0",
   "main": "postcss.config.js",
   "scripts": {
