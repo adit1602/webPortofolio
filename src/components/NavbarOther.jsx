@@ -77,7 +77,7 @@ const NavbarOther = () => {
             whileTap={{ scale: 0.95 }}
           >
             <motion.img
-              src='images/icon-bggradient.png'
+              src={iconGR}
               width="50px"
               alt="Logo"
               animate={{
