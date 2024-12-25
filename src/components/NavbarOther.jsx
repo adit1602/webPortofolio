@@ -1,10 +1,12 @@
 import React, { useState, useRef } from 'react';
 import { motion } from 'framer-motion';
 import { useNavigate, } from 'react-router-dom';
+import $iconGR from '../../images/icon-bggradient.png'
 
 const NavbarOther = () => {
   const navigate = useNavigate();
-
+  const iconGR = $iconGR;
+  
   const handleLogoClick = () => {
     navigate('/');
   };
