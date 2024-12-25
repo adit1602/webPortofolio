@@ -1,10 +1,17 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { FaBars, FaTimes } from 'react-icons/fa';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 
 const Navbar = () => {
   const [activeSection, setActiveSection] = useState('home');
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const location = useLocation();
+  const navigate = useNavigate();
+
+  const handleLogoClick = () => {
+    navigate('/');
+  }
 
   useEffect(() => {
     const handleScroll = () => {
@@ -29,14 +36,18 @@ const Navbar = () => {
   }, []);
 
   const handleScrollTo = (sectionId) => {
-    const element = document.getElementById(sectionId);
-    if (element) {
-      element.scrollIntoView({
-        behavior: 'smooth',
-        block: 'start'
-      });
-      setIsMobileMenuOpen(false);
+    if (location.pathname === '/') {
+      const element = document.getElementById(sectionId);
+      if (element) {
+        element.scrollIntoView({
+          behavior: 'smooth',
+          block: 'start'
+        });
+      }
+    } else {
+      navigate('/', { state: { scrollTo: sectionId } });
     }
+    setIsMobileMenuOpen(false);
   };
 
   const toggleMobileMenu = () => {
@@ -47,27 +58,30 @@ const Navbar = () => {
     <>
       {/* Desktop Navbar */}
       <motion.nav
+      onClick={handleLogoClick}
         initial={{ opacity: 0, y: -50 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.1 }}
+        exit={{ opacity: 0, y: -50 }}
         className="fixed w-full top-4 left-0 right-0 z-50"
       >
         <div className="container mx-auto rounded-full w-3/4 backdrop-blur-xl transition-all duration-100 ease-in-out">
           <motion.div
             className="relative bg-white/90 dark:bg-gray-900/90 
       rounded-full shadow-2xl border border-gray-200/50 dark:border-gray-800/50 
-      py-4 px-8 max-w-5xl mx-auto flex justify-between items-center transition-all duration-100 ease-in-out"
+      py-4 px-8 max-w-5xl mx-auto flex justify-between items-center transition-all duration-100 hover:shadow-[0_0_20px_rgba(255,255,255,0.1)] ease-in-out"
             initial={{
               scale: 0.9,
-              boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)'
+              boxShadow: '0 0 6px -1px rgba(255,255,255,0.3), 0 -4px 4px -1px rgba(255, 255, 255, 0.06)' 
             }}
             whileHover={{
-              scale: 1.02, // Slightly larger on hover
-              boxShadow: '0 20px 25px -5px rgba(0, 0, 0, 0.2), 0 10px 10px -5px rgba(0, 0, 0, 0.1)',
+              scale: 1.02,
+              boxShadow: '2px 2px 25px -5px rgba(255,255,255,0.3), 0 0 10px -5px rgba(255, 255, 255, 0.3)',
               transition: {
-                type: "spring",
+                type: "tween",
                 stiffness: 300,
-                damping: 10
+                damping: 10,
+                duration: 0.1
               }
             }}
             animate={{
@@ -78,7 +92,7 @@ const Navbar = () => {
                 damping: 20
               }
             }}
-            whileTap={{ scale: 0.98 }} // Slight squeeze on tap
+            whileTap={{ scale: 0.98 }}
           >
             {/* Logo */}
             <motion.a
@@ -104,7 +118,7 @@ const Navbar = () => {
                   transition: { duration: 0.1 }
                 }}
                 whileTap={{
-                  rotate: 375,
+                  rotate: 380,
                   scale: 1.2,
                   transition: {
                     duration: 0.1,
@@ -112,7 +126,7 @@ const Navbar = () => {
                   }
                 }}
                 whileHover={{
-                  rotate: 375,
+                  rotate: 370,
                   scale: 1.2,
                   transition: {
                     duration: 0.1,
@@ -124,13 +138,14 @@ const Navbar = () => {
               <motion.span
                 whileHover={{
                   scale: 1.1,
+                  rotate: 2,
                   transition: {
                     duration: 0.1,
                     type: "spring",
                     stiffness: 300
                   }
                 }}
-                className="text-xl font-bold text-gray-800 dark:text-white transition-colors duration-300"
+                className="text-xl font-bold text-white transition-colors duration-300"
               >
                 Haikal Mabrur
               </motion.span>
@@ -200,17 +215,19 @@ const Navbar = () => {
 };
 
 const NavLinks = ({ activeSection, handleScrollTo, isMobile = false }) => {
+  const location = useLocation();
+
   const navLinks = [
-    { id: 'home', label: 'Home' },
-    { id: 'about', label: 'About' },
-    { id: 'projects', label: 'Projects' },
-    { id: 'contact', label: 'Contact' }
+    { id: 'home', label: 'Home', path: '/' },
+    { id: 'about', label: 'About', path: '/' },
+    { id: 'projects', label: 'Projects', path: '/' },
+    { id: 'contact', label: 'Contact', path: '/' }
   ];
 
   return navLinks.map((link, index) => (
     <motion.a
       key={link.id}
-      href={`#${link.id}`}
+      href={link.path === '/' ? `#${link.id}` : link.path}
       onClick={(e) => {
         e.preventDefault();
         handleScrollTo(link.id);
@@ -238,7 +255,7 @@ const NavLinks = ({ activeSection, handleScrollTo, isMobile = false }) => {
           ? "text-3xl font-bold text-gray-800 dark:text-white"
           : "text-gray-600 dark:text-gray-300 hover:text-primary-600 dark:hover:text-primary-400 transition-colors duration-500 relative group font-medium"
         }
-        ${!isMobile && (activeSection === link.id
+        ${!isMobile && (location.pathname === '/' && activeSection === link.id
           ? 'text-primary-600 dark:text-primary-400'
           : '')
         }

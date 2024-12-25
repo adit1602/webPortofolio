@@ -110,9 +110,14 @@ const Hero = () => {
     <section
       id="home"
       className="relative min-h-screen bg-black overflow-hidden py-20 md:pt-0"
-      data-aos="fade"
-      data-aos-duration="500"
     >
+      <motion.section
+      initial={{ opacity: 0, y: -50 }}
+      animate={{ opacity: 1, y: 25 }}
+      transition={{ 
+        duration: 0.5,
+        ease: "easeOut"
+      }}>
       {/* Interactive Background Canvas */}
       <canvas
         ref={canvasRef}
@@ -189,8 +194,10 @@ const Hero = () => {
           </motion.div>
         </div>
       </div>
+      </motion.section>
     </section>
   );
+  
 };
 
 export default Hero;

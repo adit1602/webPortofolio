@@ -134,7 +134,7 @@ const Projects = () => {
   ];
 
   return (
-    <section id="projects" className='py-20 bg-gray-800'>
+    <section id="projects" className='py-28 bg-gray-800'>
       <section data-aos="fade-left">
         <div className="container mx-auto px-4">
           {/* Animated Title */}

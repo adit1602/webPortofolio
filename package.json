@@ -1,6 +1,6 @@
 {
   "name": "portofolio-v2",
-  "version": "2.0.6",
+  "version": "2.0.8",
   "description": "Portofolio Haikal Mabrur Versi 2.0",
   "main": "postcss.config.js",
   "scripts": {
@@ -16,11 +16,13 @@
   "license": "ISC",
   "dependencies": {
     "aos": "^2.3.4",
-    "framer-motion": "^10.16.4",
-    "react": "^18.2.0",
+    "framer-motion": "^10.18.0",
+    "lucide-react": "^0.469.0",
+    "path": "^0.12.7",
+    "react": "^18.3.1",
     "react-dom": "^18.2.0",
     "react-icons": "^5.4.0",
-    "react-router-dom": "^6.20.0",
+    "react-router-dom": "^6.28.1",
     "three": "^0.171.0",
     "vanta": "^0.5.24"
   },

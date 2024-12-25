@@ -5,7 +5,7 @@ import { SiX } from 'react-icons/si';
 
 const Contact = () => {
   return (
-    <section id="contact" className="py-20 bg-gray-900 dark:bg-gray-900">
+    <section id="contact" className="py-28 bg-gray-900 dark:bg-gray-900">
     <section data-aos="zoom-in">
       <div className="container mx-auto px-4">
         <motion.div

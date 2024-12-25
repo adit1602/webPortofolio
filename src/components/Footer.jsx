@@ -76,10 +76,12 @@ const Footer = () => {
             <motion.h3 whileTap={{ scale: 0.98 }} whileHover={{ scale: 1.02 }} className="text-xl font-semibold mb-4">Quick Links</motion.h3>
             <motion.ul whileTap={{ scale: 0.98 }} whileHover={{ scale: 1.02 }} className="space-y-2">
               {[
-                { name: 'Home', link: '#home' },
-                { name: 'About', link: '#about' },
-                { name: 'Projects', link: '#projects' },
-                { name: 'Contact', link: '#contact' }
+                { name: 'Home', link: '#home', path: '/'  },
+                { name: 'About', link: '#about', path: '/#about'  },
+                { name: 'Projects', link: '#projects', path: '/#projects'  },
+                { name: 'Contact', link: '#contact', path: '/#contact' },
+                { name: 'More About Me', link: '/more-about', path: '/more-about'  },
+                { name: 'Downloads', link: '/downloads', path: '/downloads'  },
               ].map((item, index) => (
                 <li key={index}>
                   <a 

@@ -3,6 +3,7 @@ import react from '@vitejs/plugin-react'
 
 export default defineConfig({
   plugins: [react()],
+  assetsInclude: ['**/*.pdf', '**/*.docx', '**/*.xlsx', '**/*.png', '**/*.jpg', '**/*.jpeg', '**/*.mp3', '**/*.mp4', ],
   base: './', // Tambahkan ini
   build: {
     rollupOptions: {
@@ -15,6 +16,7 @@ export default defineConfig({
           return `assets/[name]-[hash].[ext]`;
         },
         chunkFileNames: 'js/[name]-[hash].js',
+        
         entryFileNames: 'js/[name]-[hash].js',
       }
     }

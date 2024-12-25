@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { Link } from 'react-router-dom';
+import { FaArrowRight } from 'react-icons/fa';
 
 const About = () => {
   const [titleHover, setTitleHover] = useState(false);
@@ -68,18 +70,18 @@ const About = () => {
   };
 
   return (
-    <section id="about" className="py-20 bg-white dark:bg-gray-900">
+    <section id="about" className="py-28 bg-gray-900">
       <div className="container mx-auto px-4" data-aos="slide-right">
         <motion.div
           initial={{ opacity: 0, y: 50 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
+          viewport={{ once: true }} 
           className="max-w-3xl mx-auto text-center"
         >
           {/* Animated Title */}
-          <motion.h2 
+          <motion.h2
             initial={{ x: 0 }}
-            animate={{ 
+            animate={{
               x: titleHover ? [-10, 10, -10, 10, 0] : 0,
               transition: {
                 duration: 0.5,
@@ -95,7 +97,7 @@ const About = () => {
             <strong className='mb:16 font-bold bg-gradient-to-r from-blue-400 via-purple-600 to-pink-500 bg-clip-text text-transparent uppercase tracking-wider'>About Me</strong>
             <AnimatePresence>
               {titleHover && (
-                <motion.span 
+                <motion.span
                   key="emoji"
                   initial={{ opacity: 0, x: 10, scale: 0.5 }}
                   animate={{ opacity: 1, x: 0, scale: 1 }}
@@ -192,6 +194,46 @@ const About = () => {
             </h3>
             <p className="text-gray-600 dark:text-gray-300">Tag For Me!</p>
           </motion.div>
+
+          {/* New "More About Me" Button */}
+          <motion.div 
+            initial={{ opacity: 0, y: 50 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="mt-12"
+            whileHover={{ 
+              scale: 1.1,
+              rotate: [0, 5, -5, 0],
+              transition: {
+                type: "spring",
+                stiffness: 300,
+                damping: 10
+              }
+            }}
+          >
+            <Link 
+              to="/more-about"
+              className="group inline-flex items-center justify-center 
+              bg-primary text-white px-20 py-4 rounded-full 
+              hover:bg-primary-600 transition duration-300 
+              transform hover:scale-105 hover:shadow-lg"
+            >
+              <span className="mr-2">More About Me</span>
+              <motion.span
+                animate={{
+                  x: [0, 5, 0],
+                  transition: {
+                    repeat: Infinity,
+                    duration: 1,
+                    ease: "easeInOut"
+                  }
+                }}
+              >
+                <FaArrowRight className="transition-transform group-hover:translate-x-1" />
+              </motion.span>
+            </Link>
+          </motion.div>
+
         </motion.div>
       </div>
     </section>
