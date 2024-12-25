@@ -2,38 +2,51 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { FaGithub, FaInstagram, FaWhatsapp, FaDiscord, FaYoutube } from 'react-icons/fa';
 import { SiX } from "react-icons/si";
+import $icon from '../../images/icon.png'
+import { Link, useLocation } from 'react-router-dom';
 
 const Footer = () => {
+  const icon = $icon;
   const currentYear = new Date().getFullYear();
+  const location = useLocation();
+
+  const navItems = [
+    { name: 'Home', link: '/' },
+    { name: 'About', link: '#about' },
+    { name: 'Projects', link: '#projects' },
+    { name: 'Contact', link: '#contact' },
+    { name: 'More About Me', link: '/more-about' },
+    { name: 'Downloads', link: '/downloads' },
+  ];
 
   const socialLinks = [
-    { 
-      icon: FaGithub, 
+    {
+      icon: FaGithub,
       link: 'https://github.com/AnakTentara',
       name: 'GitHub'
     },
-    { 
-      icon: FaInstagram, 
+    {
+      icon: FaInstagram,
       link: 'https://instagram.com/haikal_mabrur',
       name: 'Instagram'
     },
-    { 
-      icon: SiX, 
+    {
+      icon: SiX,
       link: 'https://x.com/AnakTentara2',
       name: 'X (Twitter)'
     },
-    { 
-      icon: FaWhatsapp, 
+    {
+      icon: FaWhatsapp,
       link: 'https://wa.me/6289675732001',
       name: 'WhatsApp'
     },
-    { 
-      icon: FaDiscord, 
+    {
+      icon: FaDiscord,
       link: 'https://discord.com/users/804720825109315605',
       name: 'Discord'
     },
-    { 
-      icon: FaYoutube, 
+    {
+      icon: FaYoutube,
       link: 'https://youtube.com/@AnakTentaraIDN',
       name: 'YouTube'
     }
@@ -46,7 +59,7 @@ const Footer = () => {
           {/* Logo and Description */}
           <div>
             <motion.div
-              whileTap={{ 
+              whileTap={{
                 scale: 1.05,
                 rotate: [0, 5, -5, 1],
                 transition: {
@@ -57,14 +70,14 @@ const Footer = () => {
               }}
               className="flex items-center space-x-4 mb-4"
             >
-              <motion.img 
-                src='images/icon.png' 
-                alt="Haikal Mabrur Logo" 
+              <motion.img
+                src={icon}
+                alt="Haikal Mabrur Logo"
                 className="w-16 h-16"
                 whileHover={{ rotate: 5 }}
                 whileTap={{ rotate: 375 }}
               />
-              <motion.h2 whileTap={{ scale: 0.98, rotate: 5  }} whileHover={{ scale: 1.05, rotate: -5 }} className="text-2xl font-bold">Haikal Mabrur</motion.h2>
+              <motion.h2 whileTap={{ scale: 0.98, rotate: 5 }} whileHover={{ scale: 1.05, rotate: -5 }} className="text-2xl font-bold">Haikal Mabrur</motion.h2>
             </motion.div>
             <motion.p whileTap={{ scale: 0.98 }} whileHover={{ scale: 1.02 }} className="text-gray-400">
               A passionate teenager exploring technology, software development, and innovation.
@@ -72,32 +85,33 @@ const Footer = () => {
           </div>
 
           {/* Quick Links */}
-          <motion.div whileTap={{ scale: 0.98 }} whileHover={{ scale: 1.02 }}>
-            <motion.h3 whileTap={{ scale: 0.98 }} whileHover={{ scale: 1.02 }} className="text-xl font-semibold mb-4">Quick Links</motion.h3>
-            <motion.ul whileTap={{ scale: 0.98 }} whileHover={{ scale: 1.02 }} className="space-y-2">
-              {[
-                { name: 'Home', link: '#home', path: '/'  },
-                { name: 'About', link: '#about', path: '/#about'  },
-                { name: 'Projects', link: '#projects', path: '/#projects'  },
-                { name: 'Contact', link: '#contact', path: '/#contact' },
-                { name: 'More About Me', link: '/more-about', path: '/more-about'  },
-                { name: 'Downloads', link: '/downloads', path: '/downloads'  },
-              ].map((item, index) => (
-                <li key={index}>
-                  <a 
-                    href={item.link} 
-                    className="text-gray-400 hover:text-primary-500 transition"
-                  >
-                    {item.name}
-                  </a>
-                </li>
-              ))}
+          <motion.div>
+            <motion.h3 whileTap={{ scale: 0.98 }} whileHover={{ scale: 1.01 }} className="text-xl font-semibold mb-4">Quick Links</motion.h3>
+            <motion.ul whileTap={{ scale: 0.98 }} whileHover={{ scale: 1.01 }} className="space-y-2">
+              {navItems.map((item, index) => {
+                if (location.pathname === '/downloads' || location.pathname === '/more-about') {
+                  if (item.link === '#about' || item.link === '#projects' || item.link === '#contact') {
+                    return null;
+                  }
+                }
+
+                return (
+                  <li key={index}>
+                    <Link
+                      to={item.link}
+                      className="text-gray-400 hover:text-primary-500 transition"
+                    >
+                      {item.name}
+                    </Link>
+                  </li>
+                );
+              })}
             </motion.ul>
           </motion.div>
 
           {/* Social Media Links */}
           <motion.div whileTap={{ scale: 0.98 }}>
-            <motion.h3 whileTap={{ scale: 0.98 }} className="text-xl font-semibold mb-4">Connect with Me</motion.h3>
+            <motion.h3 whileTap={{ scale: 0.98 }} whileHover={{ scale: 1.02 }} className="text-xl font-semibold mb-4">Connect with Me</motion.h3>
             <div className="flex space-x-4">
               {socialLinks.map((social, index) => (
                 <motion.a
@@ -105,8 +119,17 @@ const Footer = () => {
                   href={social.link}
                   target="_blank"
                   rel="noopener noreferrer"
-                  whileHover={{ scale: 1.2 }}
+                  whileHover={{
+                    scale: 1.3,
+                    rotate: [0, 5, -5, 0],
+                    transition: {
+                      type: "tween",
+                      stiffness: 300,
+                      damping: 10
+                    }
+                  }}
                   whileTap={{ scale: 0.9 }}
+                  
                   className="text-gray-400 hover:text-primary-500 transition"
                 >
                   <social.icon size={24} />

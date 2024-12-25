@@ -2,8 +2,10 @@ import React, { useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
 import { scrollToSection } from '../utils/scrollToSection';
 import { useTypingText } from '../utils/typingAnimation';
+import $icon from '../../images/icon.png';
 
 const Hero = () => {
+  const icon = $icon;
   const canvasRef = useRef(null);
 
   const Particle = class {
@@ -150,7 +152,7 @@ const Hero = () => {
               className="w-64 h-64 md:w-80 md:h-80 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center"
             >
               <img
-                src='images/icon.png'
+                src={icon}
                 alt="Haikal Mabrur"
                 className="w-full h-full object-cover"
               />

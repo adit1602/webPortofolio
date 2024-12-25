@@ -1,17 +1,43 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { FaBars, FaTimes } from 'react-icons/fa';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
+import $iconGR from '../../images/icon-bggradient.png'
 
 const Navbar = () => {
+  const iconGR = $iconGR;
   const [activeSection, setActiveSection] = useState('home');
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [pressEffect, setPressEffect] = useState({ x: 0, y: 0 });
+  const navRef = useRef(null);
   const location = useLocation();
   const navigate = useNavigate();
 
   const handleLogoClick = () => {
     navigate('/');
   }
+
+  const handleNavPress = (e) => {
+    if (!navRef.current) return;
+
+    const rect = navRef.current.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const navWidth = rect.width;
+
+    // Calculate press position relative to nav width
+    const pressPosition = x / navWidth;
+
+    // Create tilt effect based on press position
+    const tiltX = (pressPosition - 0.5) * 3; // Range from -1 to 1
+    setPressEffect({
+      x: tiltX,
+      y: 0.4 // Fixed downward press  
+    });
+  };
+
+  const handleNavRelease = () => {
+    setPressEffect({ x: 0, y: 0 });
+  };
 
   useEffect(() => {
     const handleScroll = () => {
@@ -58,39 +84,64 @@ const Navbar = () => {
     <>
       {/* Desktop Navbar */}
       <motion.nav
-      onClick={handleLogoClick}
-        initial={{ opacity: 0, y: -50 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.1 }}
-        exit={{ opacity: 0, y: -50 }}
+        ref={navRef}
+        initial={{ opacity: 1, y: -100 }}
+        animate={{
+          opacity: 1,
+          y: [0, -4, 4, 0], // Gerakan vertikal lembut
+          rotateX: [0, 5, 0, -5, 0], // Gerakan lembut pada X-axis
+          rotateY: [0, -4, 0, 4, 0], // Gerakan lembut pada Y-axis
+        }}
+        exit={{
+          opacity: 1,
+          y: [0, 1, -1, 0], // Gerakan vertikal lembut
+        }}
+        transition={{
+          duration: 6, // Lama animasi untuk kelembutan
+          repeat: Infinity, // Animasi berjalan terus menerus
+          ease: "easeInOut", // Transisi lembut
+        }}
+        onMouseDown={handleNavPress}
+        onMouseUp={handleNavRelease}
+        onMouseLeave={handleNavRelease}
+        style={{
+          transformStyle: "preserve-3d",
+          perspective: "1000px",
+        }}
         className="fixed w-full top-4 left-0 right-0 z-50"
       >
         <div className="container mx-auto rounded-full w-3/4 backdrop-blur-xl transition-all duration-100 ease-in-out">
           <motion.div
             className="relative bg-white/90 dark:bg-gray-900/90 
-      rounded-full shadow-2xl border border-gray-200/50 dark:border-gray-800/50 
-      py-4 px-8 max-w-5xl mx-auto flex justify-between items-center transition-all duration-100 hover:shadow-[0_0_20px_rgba(255,255,255,0.1)] ease-in-out"
+            rounded-full shadow-2xl border border-gray-200/50 dark:border-gray-800/50 
+            py-4 px-8 max-w-5xl mx-auto flex justify-between items-center transition-all duration-100 hover:shadow-[0_0_20px_rgba(255,255,255,0.1)] ease-in-out"
             initial={{
               scale: 0.9,
-              boxShadow: '0 0 6px -1px rgba(255,255,255,0.3), 0 -4px 4px -1px rgba(255, 255, 255, 0.06)' 
+              boxShadow: '0 0 6px -1px rgba(255,255,255,0.3), 0 -4px 4px -1px rgba(255, 255, 255, 0.06)'
             }}
             whileHover={{
               scale: 1.02,
               boxShadow: '2px 2px 25px -5px rgba(255,255,255,0.3), 0 0 10px -5px rgba(255, 255, 255, 0.3)',
               transition: {
                 type: "tween",
-                stiffness: 300,
+                stiffness: 400,
                 damping: 10,
                 duration: 0.1
               }
             }}
             animate={{
               scale: 1,
-              transition: {
-                type: "spring",
-                stiffness: 300,
-                damping: 20
-              }
+              rotateX: pressEffect.y * 10,
+              rotateY: pressEffect.x * 10,
+              z: pressEffect.y * -10,
+              boxShadow: pressEffect.y
+                ? '0 10px 30px -5px rgba(0,0,0,0.3)'
+                : '0 0 6px -1px rgba(255,255,255,0.3), 0 -4px 4px -1px rgba(255, 255, 255, 0.06)'
+            }}
+            transition={{
+              type: "spring",
+              stiffness: 300,
+              damping: 20
             }}
             whileTap={{ scale: 0.98 }}
           >
@@ -109,7 +160,7 @@ const Navbar = () => {
               }}
             >
               <motion.img
-                src='images/icon-bggradient.png'
+                src={iconGR}
                 width="50px"
                 alt="Logo"
                 animate={{
@@ -239,14 +290,14 @@ const NavLinks = ({ activeSection, handleScrollTo, isMobile = false }) => {
         transition: {
           delay: isMobile ? index * 0.1 : 0,
           type: "spring",
-          stiffness: 200,  // Reduced stiffness for slower animation
-          damping: 15      // Reduced damping for more gentle movement
+          stiffness: 200,
+          damping: 15
         }
       }}
       whileHover={{
-        scale: 1.03,  // Slightly reduced scale
+        scale: 1.03,
         transition: {
-          duration: 0.3  // Slower hover animation
+          duration: 0.3
         }
       }}
       whileTap={{ scale: 0.97 }}
@@ -272,7 +323,7 @@ const NavLinks = ({ activeSection, handleScrollTo, isMobile = false }) => {
             `}
             transition={{
               type: "spring",
-              stiffness: 100,  // Slower underline animation
+              stiffness: 100,
               damping: 10
             }}
           />
@@ -292,4 +343,5 @@ const NavLinks = ({ activeSection, handleScrollTo, isMobile = false }) => {
     </motion.a>
   ));
 };
+
 export default Navbar;

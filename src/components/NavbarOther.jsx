@@ -1,6 +1,6 @@
-import React from 'react';
+import React, { useState, useRef } from 'react';
 import { motion } from 'framer-motion';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, } from 'react-router-dom';
 
 const NavbarOther = () => {
   const navigate = useNavigate();
@@ -12,23 +12,24 @@ const NavbarOther = () => {
   return (
     <motion.nav
       className="fixed w-full top-4 left-0 right-0 z-50"
-      initial={{ 
-        opacity: 0, 
+      initial={{
+        opacity: 1,
         y: -100 // Start from above
       }}
-      animate={{ 
-        opacity: 1, 
-        y: 0 // Animate down to original position
+      animate={{
+        opacity: 1,
+        y: [0, -4, 4, 0], // Gerakan vertikal lembut
+        rotateX: [0, 5, 0, -5, 0], // Gerakan lembut pada X-axis
+        rotateY: [0, -4, 0, 4, 0], // Gerakan lembut pada Y-axis
       }}
-      exit={{ 
-        opacity: 0, 
-        y: -100 // Exit back to top
+      exit={{
+        opacity: 1,
+        y: [0, 1, -1, 0], // Gerakan vertikal lembut
       }}
-      transition={{ 
-        type: "spring",
-        stiffness: 100,
-        damping: 10,
-        duration: 0.5
+      transition={{
+        duration: 6, // Lama animasi untuk kelembutan
+        repeat: Infinity, // Animasi berjalan terus menerus
+        ease: "easeInOut", // Transisi lembut
       }}
     >
       <div className="container mx-auto rounded-full w-3/4 backdrop-blur-xl">
@@ -38,7 +39,7 @@ const NavbarOther = () => {
           py-4 px-8 max-w-5xl mx-auto flex items-center justify-center transition-all duration-300"
           initial={{
             scale: 0.9,
-            boxShadow: '0 0 6px -1px rgba(255,255,255,0.3), 0 -4px 4px -1px rgba(255, 255, 255, 0.06)' 
+            boxShadow: '0 0 6px -1px rgba(255,255,255,0.3), 0 -4px 4px -1px rgba(255, 255, 255, 0.06)'
           }}
           whileHover={{
             scale: 1.02,
@@ -50,17 +51,17 @@ const NavbarOther = () => {
               duration: 0.1
             }
           }}
-          animate={{
+          aanimate={{
             scale: 1,
-            transition: {
-              type: "spring",
-              stiffness: 300,
-              damping: 20
-            }
+          }}
+          transition={{
+            type: "spring",
+            stiffness: 300,
+            damping: 20
           }}
           whileTap={{ scale: 0.98 }}
           onClick={handleLogoClick}
-          >
+        >
           {/* Logo Section */}
           <motion.div
             className="flex items-center space-x-4 group cursor-pointer"
@@ -100,17 +101,17 @@ const NavbarOther = () => {
               className="transition-transform duration-300"
             />
             <motion.span
-                whileHover={{
-                  scale: 1.1,
-                  rotate: 2,
-                  transition: {
-                    duration: 0.1,
-                    type: "spring",
-                    stiffness: 300
-                  }
-                }}
-                className="text-xl font-bold text-white transition-colors duration-300"
-              >
+              whileHover={{
+                scale: 1.1,
+                rotate: 2,
+                transition: {
+                  duration: 0.1,
+                  type: "spring",
+                  stiffness: 300
+                }
+              }}
+              className="text-xl font-bold text-white transition-colors duration-300"
+            >
               Haikal Mabrur
             </motion.span>
           </motion.div>
