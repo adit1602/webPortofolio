@@ -14,7 +14,7 @@ const Footer = () => {
 
   const scrollOrNavigate = (targetId) => {
     if (location.pathname !== "/") {
-      window.location.href = `/#${targetId}`;
+      window.location.href = `/`;
     } else {
       animateScroll.scrollTo(document.getElementById(targetId).offsetTop, {
         duration: 500,
