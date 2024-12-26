@@ -3,21 +3,25 @@ import { motion } from 'framer-motion';
 import { FaGithub, FaInstagram, FaWhatsapp, FaDiscord, FaYoutube } from 'react-icons/fa';
 import { SiX } from "react-icons/si";
 import $icon from '../../images/icon.png'
-import { Link, useLocation } from 'react-router-dom';
+import { Link as RouterLink, useLocation } from "react-router-dom";
+import { Link as ScrollLink, animateScroll } from "react-scroll";
 
 const Footer = () => {
   const icon = $icon;
   const currentYear = new Date().getFullYear();
   const location = useLocation();
+  const currentPath = location.pathname;
 
-  const navItems = [
-    { name: 'Home', link: '/' },
-    { name: 'About', link: '#about' },
-    { name: 'Projects', link: '#projects' },
-    { name: 'Contact', link: '#contact' },
-    { name: 'More About Me', link: '/more-about' },
-    { name: 'Downloads', link: '/downloads' },
-  ];
+  const scrollOrNavigate = (targetId) => {
+    if (location.pathname !== "/") {
+      window.location.href = `/#${targetId}`;
+    } else {
+      animateScroll.scrollTo(document.getElementById(targetId).offsetTop, {
+        duration: 500,
+        smooth: true,
+      });
+    }
+  };
 
   const socialLinks = [
     {
@@ -86,26 +90,34 @@ const Footer = () => {
 
           {/* Quick Links */}
           <motion.div>
-            <motion.h3 whileTap={{ scale: 0.98 }} whileHover={{ scale: 1.01 }} className="text-xl font-semibold mb-4">Quick Links</motion.h3>
-            <motion.ul whileTap={{ scale: 0.98 }} whileHover={{ scale: 1.01 }} className="space-y-2">
-              {navItems.map((item, index) => {
-                if (location.pathname === '/downloads' || location.pathname === '/more-about') {
-                  if (item.link === '#about' || item.link === '#projects' || item.link === '#contact') {
-                    return null;
-                  }
-                }
-
-                return (
-                  <li key={index}>
-                    <Link
-                      to={item.link}
-                      className="text-gray-400 hover:text-primary-500 transition"
-                    >
-                      {item.name}
-                    </Link>
-                  </li>
-                );
-              })}
+            <motion.h3 whileTap={{ scale: 0.98 }} whileHover={{ scale: 1.03 }} className="text-xl font-semibold mb-4">Quick Links</motion.h3>
+            <motion.ul whileTap={{ scale: 0.98 }} whileHover={{ scale: 1.01 }} className="space-y-2 p-2">
+              <div>
+                <motion.li whileTap={{ scale: 0.98 }} whileHover={{ scale: 1.03 }} onClick={() => scrollOrNavigate("home")} className="text-gray-400 hover:text-primary-500 transition">Home</motion.li>
+              </div>
+              {currentPath === "/" && (
+                <>
+                  <div>
+                    <motion.li whileTap={{ scale: 0.98 }} whileHover={{ scale: 1.03 }} onClick={() => scrollOrNavigate("about")} className="text-gray-400 hover:text-primary-500 transition">About</motion.li>
+                  </div>
+                  <div>
+                    <motion.li whileTap={{ scale: 0.98 }} whileHover={{ scale: 1.03 }} onClick={() => scrollOrNavigate("projects")} className="text-gray-400 hover:text-primary-500 transition">Projects</motion.li>
+                  </div>
+                  <div>
+                    <motion.li whileTap={{ scale: 0.98 }} whileHover={{ scale: 1.03 }} onClick={() => scrollOrNavigate("contact")} className="text-gray-400 hover:text-primary-500 transition">Contact</motion.li>
+                  </div>
+                </>
+              )}
+              <div>
+                <RouterLink to='/more-about'>
+                  <motion.li whileTap={{ scale: 0.98 }} whileHover={{ scale: 1.03 }} className="text-gray-400 hover:text-primary-500 transition">More About Me</motion.li>
+                </RouterLink>
+              </div>
+              <div>
+                <RouterLink to='/downloads'>
+                  <motion.li whileTap={{ scale: 0.98 }} whileHover={{ scale: 1.03 }} className="text-gray-400 hover:text-primary-500 transition">Downloads</motion.li>
+                </RouterLink>
+              </div>
             </motion.ul>
           </motion.div>
 
@@ -129,7 +141,7 @@ const Footer = () => {
                     }
                   }}
                   whileTap={{ scale: 0.9 }}
-                  
+
                   className="text-gray-400 hover:text-primary-500 transition"
                 >
                   <social.icon size={24} />

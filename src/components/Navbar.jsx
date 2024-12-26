@@ -71,7 +71,7 @@ const Navbar = () => {
         });
       }
     } else {
-      navigate('/', { state: { scrollTo: sectionId } });
+      navigate('/', { state: { handleScrollTo: sectionId } });
     }
     setIsMobileMenuOpen(false);
   };
@@ -85,21 +85,14 @@ const Navbar = () => {
       {/* Desktop Navbar */}
       <motion.nav
         ref={navRef}
-        initial={{ opacity: 1, y: -100 }}
+        initial={{ opacity: 0, y: -100 }}
         animate={{
           opacity: 1,
-          y: [0, -4, 4, 0], // Gerakan vertikal lembut
-          rotateX: [0, 5, 0, -5, 0], // Gerakan lembut pada X-axis
-          rotateY: [0, -4, 0, 4, 0], // Gerakan lembut pada Y-axis
-        }}
-        exit={{
-          opacity: 1,
-          y: [0, 1, -1, 0], // Gerakan vertikal lembut
-        }}
+          y: 0
+        }} 
         transition={{
-          duration: 6, // Lama animasi untuk kelembutan
-          repeat: Infinity, // Animasi berjalan terus menerus
-          ease: "easeInOut", // Transisi lembut
+          duration: 0.5,
+          ease: "easeInOut",
         }}
         onMouseDown={handleNavPress}
         onMouseUp={handleNavRelease}
