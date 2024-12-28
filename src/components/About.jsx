@@ -150,7 +150,7 @@ const About = () => {
             className="mt-12 p-4 bg-gray-100 dark:bg-gray-800 rounded-lg cursor-pointer"
           >
             <h3 className="font-bold text-xl text-gray-800 dark:text-white">
-              hakalmabrur125@gmail.com
+              me@haikaldev.my.id
             </h3>
             <p className="text-gray-600 dark:text-gray-300">Email</p>
           </motion.div>
