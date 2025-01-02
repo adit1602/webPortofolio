@@ -5,6 +5,7 @@ import { FaExternalLinkAlt, FaTimes } from 'react-icons/fa';
 import projectPictPortov1 from '../../images/1stportofolio.png';
 import projectPictPortov2 from '../../images/screenshot-portofolio.png';
 import projectPictNaturalSMP from '../../images/naturalsmp-screenshot.png';
+import projectPictNaniKore from '../../images/nanikoregroup.png';
 
 const ProjectCard = ({ img, title, description, tags, link }) => {
   const [isPreviewOpen, setIsPreviewOpen] = useState(false);
@@ -24,16 +25,16 @@ const ProjectCard = ({ img, title, description, tags, link }) => {
 
   return (
     <section>
-      <motion.div 
+      <motion.div
         whileHover={{ y: -10 }}
         whileTap={{ scale: 0.98, y: -10 }}
         onClick={handleOpenPreview}
         className="bg-gray-700 p-6 rounded-xl shadow-lg cursor-pointer"
       >
         <div className="h-48 bg-gray-800 rounded-lg mb-4 overflow-hidden">
-          <img 
-            src={img} 
-            alt={title} 
+          <img
+            src={img}
+            alt={title}
             className="w-full h-full object-cover hover:scale-110 transition-transform duration-300"
           />
         </div>
@@ -41,8 +42,8 @@ const ProjectCard = ({ img, title, description, tags, link }) => {
         <p className="text-gray-300 mb-4">{description}</p>
         <div className="flex flex-wrap gap-2">
           {tags.map((tag, index) => (
-            <span 
-              key={index} 
+            <span
+              key={index}
               className="px-3 py-1 bg-primary-900 text-primary-100 rounded-full text-sm"
             >
               {tag}
@@ -53,7 +54,7 @@ const ProjectCard = ({ img, title, description, tags, link }) => {
 
       <AnimatePresence>
         {isPreviewOpen && (
-          <motion.div 
+          <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
@@ -68,7 +69,7 @@ const ProjectCard = ({ img, title, description, tags, link }) => {
               {/* Popup Header */}
               <div className="flex justify-between items-center p-4 border-b dark:border-gray-700">
                 <h2 className="text-xl font-bold">{title}</h2>
-                <button 
+                <button
                   onClick={handleClosePreview}
                   className="text-white hover:text-white"
                 >
@@ -80,8 +81,8 @@ const ProjectCard = ({ img, title, description, tags, link }) => {
               <div className="p-4 text-white">
                 {/* Preview Section */}
                 <div className="w-full h-[360px] bg-gray-100 dark:bg-gray-700 rounded-lg mb-4 overflow-hidden">
-                  <motion.iframe 
-                    src={link} 
+                  <motion.iframe
+                    src={link}
                     title={title}
                     className="w-full h-full"
                     allowFullScreen
@@ -111,25 +112,32 @@ const Projects = () => {
 
   const projects = [
     {
-      img: `${projectPictPortov1}`,
+      img: projectPictPortov1,
       title: "My First Portfolio Website",
       description: "My first modern web portfolio built with HTML, CSS, and little JavaScript",
       tags: ["HTML", "CSS", "JavaScript"],
       link: "https://v1.haikaldev.my.id"
     },
     {
-      img: `${projectPictNaturalSMP}`,
-      title: "Natural Survival Multiplayer",
-      description: "An economy Minecraft server from Indonesia and for Asia",
+      img: projectPictNaturalSMP,
+      title: "Minecraft SMP Server",
+      description: "Natural SMP. An economy Minecraft server from Indonesia and for Asia",
       tags: ["Paper", "Bungeecord", "SMP", "RPG", "SlimeFun"],
       link: "https://web.naturalsmp.xyz"
     },
     {
-      img: `${projectPictPortov2}`,
+      img: projectPictPortov2,
       title: "This Portfolio Website",
       description: "My recent Portfolio Website built with AI",
-      tags: ["JSX", "CSS", "HTML"],
+      tags: ["JavaScript", "React", "Framer Motion"],
       link: "https://haikaldev.my.id"
+    },
+    {
+      img: projectPictNaniKore,
+      title: "Group Website",
+      description: "my website group, themed professional",
+      tags: ["React", "Framer Motion", "JavaScript"],
+      link: "https://group.haikaldev.my.id/"
     }
   ];
 
@@ -138,9 +146,9 @@ const Projects = () => {
       <section data-aos="fade-left">
         <div className="container mx-auto px-4">
           {/* Animated Title */}
-          <motion.h2 
+          <motion.h2
             initial={{ x: 0 }}
-            animate={{ 
+            animate={{
               x: titleHover ? [-10, 10, -10, 10, 0] : 0,
               transition: {
                 duration: 0.5,
@@ -156,7 +164,7 @@ const Projects = () => {
             <strong className='mb:16 font-bold bg-gradient-to-r from-blue-400 via-purple-600 to-pink-500 bg-clip-text text-transparent uppercase tracking-wider'>Projects</strong>
             <AnimatePresence>
               {titleHover && (
-                <motion.span 
+                <motion.span
                   key="emoji"
                   initial={{ opacity: 0, x: 10, scale: 0.5 }}
                   animate={{ opacity: 1, x: 0, scale: 1 }}
@@ -172,7 +180,16 @@ const Projects = () => {
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {projects.map((project, index) => (
-              <ProjectCard key={index} {...project} />
+              <div
+                key={index}
+                className={
+                  index === 3
+                    ? "lg:col-start-2"
+                    : ""
+                }
+              >
+                <ProjectCard key={index} {...project} />
+              </div>
             ))}
           </div>
         </div>

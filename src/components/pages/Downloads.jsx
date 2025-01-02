@@ -13,6 +13,7 @@ import {
   FaFileArchive,
 } from 'react-icons/fa';
 import { Link } from 'react-router-dom';
+import LoadingPage from '../../utils/LoadingPage';
 
 const getFileIcon = (fileName) => {
   const extension = fileName.split('.').pop().toLowerCase();
@@ -47,7 +48,6 @@ const FilePreview = ({ fileUrl, fileName }) => {
   useEffect(() => {
     const generatePreview = async () => {
       try {
-        // Image preview
         if (['jpg', 'jpeg', 'png', 'gif', 'webp'].includes(extension)) {
           setPreview(
             <img 
@@ -59,7 +59,6 @@ const FilePreview = ({ fileUrl, fileName }) => {
           return;
         }
 
-        // PDF preview (requires PDF.js or similar)
         if (extension === 'pdf') {
           setPreview(
             <iframe 
@@ -71,7 +70,6 @@ const FilePreview = ({ fileUrl, fileName }) => {
           return;
         }
 
-        // Fallback to icon if no preview available
         setPreview(getFileIcon(fileName));
       } catch (error) {
         console.error('Preview generation error:', error);
@@ -101,18 +99,16 @@ const Downloads = () => {
   const [currentFolder, setCurrentFolder] = useState('root');
   const [downloadingFile, setDownloadingFile] = useState(null);
   const [fileStructure, setFileStructure] = useState({ root: [] });
+  const [isLoading, setIsLoading] = useState(true);
+  const [downloadFiles, setDownloadFiles] = useState([]);
 
-  // New state for sorting and menu
-  const [isSortMenuOpen, setIsSortMenuOpen] = useState(false);
-  const [sortConfig, setSortConfig] = useState({
+  const [ sortConfig ] = useState({
     key: 'name',
     direction: 'asc'
   });
 
-  // Sorting function
   const sortFiles = (files, key, direction) => {
     return [...files].sort((a, b) => {
-      // Handle different sorting scenarios
       switch(key) {
         case 'name':
           return direction === 'asc' 
@@ -120,7 +116,6 @@ const Downloads = () => {
             : b.name.localeCompare(a.name);
         
         case 'size':
-          // Convert size to comparable numeric value
           const parseSize = (sizeStr) => {
             const units = ['Bytes', 'KB', 'MB', 'GB', 'TB'];
             const [value, unit] = sizeStr.split(' ');
@@ -133,7 +128,6 @@ const Downloads = () => {
             : parseSize(b.size || '0 Bytes') - parseSize(a.size || '0 Bytes');
         
         case 'date':
-          // Assuming you'll add a date property to files
           return direction === 'asc'
             ? new Date(a.date || 0) - new Date(b.date || 0)
             : new Date(b.date || 0) - new Date(a.date || 0);
@@ -143,44 +137,44 @@ const Downloads = () => {
       }
     });
   };
-
-  // Sorting menu component
-  const SortMenu = () => (
-    <motion.div 
-      initial={{ opacity: 0, y: -10 }}
-      animate={{ opacity: 1, y: 0 }}
-      exit={{ opacity: 0, y: -10 }}
-      className="absolute right-0 top-full mt-2 bg-gray-700 rounded-lg shadow-lg z-50 overflow-hidden"
-    >
-      {[
-        { key: 'name', label: 'Sort by Name' },
-        { key: 'size', label: 'Sort by Size' },
-        { key: 'date', label: 'Sort by Date' }
-      ].map((option) => (
-        <div key={option.key} className="flex">
-          <button
-            onClick={() => {
-              setSortConfig({
-                key: option.key,
-                direction: sortConfig.key === option.key && sortConfig.direction === 'asc' ? 'desc' : 'asc'
-              });
-              setIsSortMenuOpen(false);
-            }}
-            className="w-full text-left px-4 py-2 hover:bg-gray-600 flex items-center"
-          >
-            <FaSort className="mr-2" />
-            {option.label} {sortConfig.key === option.key && (
-              <span className="ml-2 text-xs">
-                {sortConfig.direction === 'asc' ? '▲' : '▼'}
-              </span>
-            )}
-          </button>
-        </div>
-      ))}
-    </motion.div>
-  );
-
+  
   useEffect(() => {
+    const loadDownloadAssets = async () => {
+      try {
+        const files = import.meta.glob('/downloads/**/*', {
+          eager: true,
+          query: '?url', 
+          import: 'default',
+        });
+
+        const downloadFileUrls = Object.values(files);
+
+        await Promise.all(
+          downloadFileUrls.map(async (fileUrl) => {
+            try {
+              const response = await fetch(fileUrl);
+              if (!response.ok) {
+                throw new Error(`Failed to load ${fileUrl}`);
+              }
+              return response;
+            } catch (error) {
+              console.error(`Error loading file ${fileUrl}:`, error);
+              return null;
+            }
+          })
+        );
+
+        setDownloadFiles(downloadFileUrls);
+
+        await new Promise(resolve => setTimeout(resolve, 1500));
+        
+        setIsLoading(false);
+      } catch (error) {
+        console.error("Download assets loading error:", error);
+        setIsLoading(false);
+      }
+    };
+
     const importFiles = async () => {
       try {
         const files = import.meta.glob('/downloads/**/*', {
@@ -194,16 +188,9 @@ const Downloads = () => {
 
         // Process imported files
         const filePromises = Object.entries(files).map(async ([filePath, fileUrl]) => {
-          // Remove '/downloads/' from the start and split path
           const relativePath = filePath.replace('/downloads/', '').split('/');
-          
-          // Last item is the filename
           const fileName = relativePath.pop();
-          
-          // Remaining items are folders
           const folderPath = relativePath.join('/');
-
-          // Create folder if it doesn't exist
           if (!folderMap.has(folderPath)) {
             const folderItem = {
               name: folderPath || 'Root',
@@ -214,10 +201,8 @@ const Downloads = () => {
             folderMap.set(folderPath, folderItem);
           }
 
-          // Get the corresponding folder
           const parentFolder = folderMap.get(folderPath);
 
-          // Fetch file size
           let fileSize = 'Unknown';
           try {
             const response = await fetch(fileUrl);
@@ -227,7 +212,6 @@ const Downloads = () => {
             console.error(`Error fetching size for ${fileName}:`, error);
           }
 
-          // Add file to folder
           parentFolder.items.push({
             name: fileName,
             type: 'file',
@@ -243,9 +227,14 @@ const Downloads = () => {
         console.error('Error importing files:', error);
       }
     };
-
+ 
+    loadDownloadAssets();
     importFiles();
   }, []);
+
+  if (isLoading) {
+    return <LoadingPage />;
+  }
 
   const handleDownload = (file) => {
     setDownloadingFile(file);
