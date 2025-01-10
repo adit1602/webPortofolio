@@ -29,21 +29,18 @@ import porto4 from '../images/nanikoregroup.png'
 function App() {
   const location = useLocation();
   const [isLoading, setIsLoading] = useState(true);
+  const [profileLoaded, setProfileLoaded] = useState(false);
 
   useEffect(() => {
-    const loadCriticalAssets = async () => {
+    const loadProfileImage = async () => {
       try {
-        const criticalImages = [
+        const profileImages = [
           icongr,
-          icon,
-          porto1,
-          porto2,
-          porto3,
-          porto4,
+          icon
         ];
 
         await Promise.all(
-          criticalImages.map(src => 
+          profileImages.map(src => 
             new Promise((resolve, reject) => {
               const img = new Image();
               img.src = src;
@@ -53,16 +50,32 @@ function App() {
           )
         );
 
-        await new Promise(resolve => setTimeout(resolve, 1500));
+        await new Promise(resolve => setTimeout(resolve, 1000));
         
+        setProfileLoaded(true);
         setIsLoading(false);
       } catch (error) {
-        console.error("Asset loading error:", error);
+        console.error("Profile image loading error:", error);
+        setProfileLoaded(true);
         setIsLoading(false);
       }
     };
 
-    loadCriticalAssets();
+    const preloadPortfolioImages = () => {
+      const portfolioImages = [
+        porto1,
+        porto2,
+        porto3,
+        porto4
+      ];
+      portfolioImages.forEach(src => {
+        const img = new Image();
+        img.src = src;
+      });
+    };
+
+    loadProfileImage();
+    preloadPortfolioImages();
   }, []);
 
   if (isLoading) {
