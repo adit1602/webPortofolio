@@ -1,26 +1,28 @@
 # 🚀 Personal Portfolio Website - Haikal Mabrur
 
-## 📝 Description
+## 📝 Deskripsi
 
-This is a modern, responsive personal portfolio website showcasing my skills, projects, and professional information. Built with React, Tailwind CSS, and Framer Motion, the website provides an interactive and visually appealing representation of my work and capabilities.
+Ini adalah website portfolio pribadi modern dan responsif buat nunjukin skill, proyek, dan info profesional gue. Dibuat pake React, Tailwind CSS, dan Framer Motion, website ini punya tampilan yang interaktif dan keren buat ngejual diri gue, hehe.
 
-## 🌟 Features
+## 🌟 Fitur-Fitur Keren
 
-- **Responsive Design**: Fully responsive layout that works on all device sizes
-- **Dark Mode Support**: Seamless dark/light mode switching
-- **Animated Interactions**: Smooth animations using Framer Motion
-- **Modern Tech Stack**: Built with React and Tailwind CSS
-- **Sections**:
-  - Hero
-  - About Me
-  - Projects
-  - Contact
+- **Responsive Design**: Tampilan yang bisa nyaman diliat di semua ukuran layar, dari HP sampe laptop.
+- **Animasi Keren**: Ada animasi halus pake Framer Motion, biar makin hidup aja.
+- **Tech Stack Modern**: Dibangun pake React dan Tailwind CSS, biar cepet dan ringan.
 
-## 🛠 Technologies Used
+## 🛠 Teknologi yang Dipake
 
 - **Frontend**:
   - React.js
   - Tailwind CSS
   - Framer Motion
 - **Icons**: React Icons
-- **Deployment**: Vite
+- **Deployment**: Vite (biar cepet banget waktu build)
+
+## 💬 Kenapa Bikin Ini?
+
+Sebenernya sih, ini cuma buat nunjukin kalau gue bisa bikin website yang keren dan fungsional. Plus, biar orang-orang bisa liat apa aja yang udah gue kerjain selama ini. Siapa tau ada yang tertarik buat kolaborasi atau nawarin kerjaan, kan? 😄
+
+## 🚀 Gimana Cara Ngeliatnya?
+
+Langsung aja cek di [sini](https://haikaldev.my.id/). Jangan lupa kasih bintang ya kalo suka! ✨

@@ -6,7 +6,7 @@ import $iconGR from '../../images/icon-bggradient.png'
 const NavbarOther = () => {
   const navigate = useNavigate();
   const iconGR = $iconGR;
-  
+
   const handleLogoClick = () => {
     navigate('/');
   };
@@ -14,16 +14,16 @@ const NavbarOther = () => {
   return (
     <motion.nav
       className="fixed w-full top-4 left-0 right-0 z-50"
-      initial={{ opacity: 0, scale: 0.70, y: -100 }}
-        animate={{
-          opacity: 1,
-          scale: 1,
-          y: 0
-        }} 
-        transition={{
-          duration: 0.5,
-          ease: "easeInOut",
-        }}
+      initial={{ opacity: 0, y: -100 }}
+      animate={{
+        opacity: 1,
+        scale: 1,
+        y: 0
+      }}
+      transition={{
+        duration: 0.5,
+        ease: "easeInOut",
+      }}
     >
       <div className="container mx-auto rounded-full w-3/4 backdrop-blur-xl">
         <motion.div
@@ -59,6 +59,21 @@ const NavbarOther = () => {
           <motion.div
             className="flex items-center space-x-4 group cursor-pointer"
             onClick={handleLogoClick}
+            initial={{
+              x: -360,
+            }}
+            animate={{
+              x: 0,
+            }}
+            transition={{
+              type: "spring",
+              stiffness: 100,
+              damping: 20,
+              mass: 1,
+              bounce: 1,
+              duration: 3,
+              delay: 0.3,
+            }}
             whileHover={{
               scale: 1.05,
               transition: {
@@ -113,5 +128,4 @@ const NavbarOther = () => {
     </motion.nav>
   );
 };
-
 export default NavbarOther;

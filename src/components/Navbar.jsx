@@ -89,7 +89,7 @@ const Navbar = () => {
         animate={{
           opacity: 1,
           y: 0
-        }} 
+        }}
         transition={{
           duration: 0.5,
           ease: "easeInOut",
@@ -143,6 +143,21 @@ const Navbar = () => {
               href="#home"
               onClick={(e) => { e.preventDefault(); handleScrollTo('home'); }}
               className="flex items-center space-x-4 group"
+              initial={{
+                x: 360,
+              }}
+              animate={{
+                x: 0,
+              }}
+              transition={{
+                type: "spring",
+                stiffness: 100,
+                damping: 20,
+                mass: 1,
+                bounce: 1,
+                duration: 3,
+                delay: 0.3,
+              }}
               whileHover={{
                 scale: 1.05,
                 transition: {
@@ -196,12 +211,31 @@ const Navbar = () => {
             </motion.a>
 
             {/* Desktop Navigation */}
-            <div className="hidden md:flex items-center space-x-8">
+            <motion.div 
+              className="hidden md:flex items-center space-x-8"
+              initial={{
+                x: -500,
+                opacity: 0,
+              }}
+              animate={{
+                x: 0,
+                opacity: 1,
+              }}
+              transition={{
+                type: "spring",
+                stiffness: 100,
+                damping: 20,
+                mass: 1,
+                bounce: 1,
+                duration: 3,
+                delay: 0.3,
+              }}
+            >
               <NavLinks
                 activeSection={activeSection}
                 handleScrollTo={handleScrollTo}
               />
-            </div>
+            </motion.div>
 
             {/* Mobile Menu Toggle */}
             <div className="md:hidden flex items-center">
