@@ -59,12 +59,6 @@ const NavbarOther = () => {
           <motion.div
             className="flex items-center space-x-4 group cursor-pointer"
             onClick={handleLogoClick}
-            initial={{
-              x: -360,
-            }}
-            animate={{
-              x: 0,
-            }}
             transition={{
               type: "spring",
               stiffness: 100,

@@ -144,10 +144,12 @@ const Navbar = () => {
               onClick={(e) => { e.preventDefault(); handleScrollTo('home'); }}
               className="flex items-center space-x-4 group"
               initial={{
-                x: 360,
+                y: -15,
+                opacity: 0,
               }}
               animate={{
-                x: 0,
+                y: 0,
+                opacity: 1,
               }}
               transition={{
                 type: "spring",
@@ -214,7 +216,7 @@ const Navbar = () => {
             <motion.div 
               className="hidden md:flex items-center space-x-8"
               initial={{
-                x: -500,
+                x: -560,
                 opacity: 0,
               }}
               animate={{

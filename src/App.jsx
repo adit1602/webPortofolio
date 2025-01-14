@@ -15,6 +15,8 @@ import Downloads from './components/pages/Downloads';
 import Download from './components/pages/direct-page/Download';
 import Unduh from './components/pages/direct-page/Unduh';
 import More from './components/pages/direct-page/More';
+import MoreProjects from './components/pages/MoreProjects';
+import Project from './components/pages/direct-page/Project';
 import NotFound from './components/pages/direct-page/404';
 
 import { PreventInteractions } from './utils/preventInteractions';
@@ -102,6 +104,8 @@ function App() {
         <Route path="/download" element={<Download />} />
         <Route path="/more-about" element={<MoreAbout />} />
         <Route path="/more" element={<More />} />
+        <Route path="/more-projects" element={<MoreProjects />} />
+        <Route path="/project" element={<Project />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
       <Footer />

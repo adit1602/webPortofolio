@@ -89,7 +89,7 @@ const MoreAbout = () => {
         <motion.h1 whileHover={{ scale: 1.03, rotate: 1 }} whileTap={{ scale: 0.95, rotate: -1 }} className="py-12 text-5xl font-bold mb-6 bg-gradient-to-r from-blue-400 via-purple-600 to-pink-500 bg-clip-text text-transparent">
           More About Haikal Mabrur
         </motion.h1>
-        <br/>
+        <br />
         <motion.div whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.99 }} className="max-w-2xl mx-auto bg-gray-800 rounded-xl p-8 shadow-2xl mb-8">
           <motion.h2 whileTap={{ scale: 0.95 }} className="text-3xl font-semibold mb-4">Background</motion.h2>
           <motion.p whileTap={{ scale: 0.95 }} className="text-gray-300 mb-4">
@@ -112,9 +112,9 @@ const MoreAbout = () => {
             ))}
           </motion.p>
         </motion.div>
-            
+
         <div>
-        <motion.h2
+          <motion.h2
             initial={{ x: 0 }}
             animate={{
               x: titleHover ? [-10, 10, -10, 10, 0] : 0,
@@ -147,7 +147,7 @@ const MoreAbout = () => {
           </motion.h2>
 
           <motion.div className="grid grid-cols-2 md:grid-cols-3 gap-6 mt-12">
-        {[
+            {[
               { title: "Intel Core i5 760", subtitle: "CPU" },
               { title: "16GB DDR3", subtitle: "RAM" },
               { title: "GT 220", subtitle: "GPU/VGA" },
@@ -171,7 +171,7 @@ const MoreAbout = () => {
                 </p>
               </motion.div>
             ))}
-        </motion.div> 
+          </motion.div>
         </div>
 
         <div className="flex justify-center space-x-4 mt-8">
@@ -202,7 +202,7 @@ const MoreAbout = () => {
             whileHover={{
               scale: 1.1,
               rotate: [0, 5, -5, 0],
-              transition: {
+              transion: {
                 type: "spring",
                 stiffness: 300,
                 damping: 10

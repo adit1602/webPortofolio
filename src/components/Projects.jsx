@@ -1,11 +1,13 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { FaExternalLinkAlt, FaTimes } from 'react-icons/fa';
+import { FaExternalLinkAlt, FaArrowRight, FaTimes } from 'react-icons/fa';
+import { Link } from 'react-router-dom';
 
 import projectPictPortov1 from '../../images/1stportofolio.png';
 import projectPictPortov2 from '../../images/screenshot-portofolio.png';
 import projectPictNaturalSMP from '../../images/naturalsmp-screenshot.png';
 import projectPictNaniKore from '../../images/nanikoregroup.png';
+//import projectPictMTs from '../../images/PTSPMTs.png';
 
 const ProjectCard = ({ img, title, description, tags, link }) => {
   const [isPreviewOpen, setIsPreviewOpen] = useState(false);
@@ -191,6 +193,45 @@ const Projects = () => {
                 <ProjectCard key={index} {...project} />
               </div>
             ))}
+          </div>
+          <div className="lg:col-start-2 flex justify-center items-center">
+          <motion.div 
+            className="mt-14"
+            initial={{ opacity: 0, y: 50 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            whileHover={{ 
+              scale: 1.1,
+              rotate: [0, 5, -5, 0],
+              transition: {
+                type: "spring",
+                stiffness: 300,
+                damping: 10
+              }
+            }}
+          >
+            <Link 
+              to="/more-projects"
+              className="group inline-flex items-center justify-center 
+              bg-primary text-white px-20 py-4 rounded-full 
+              hover:bg-primary-600 transition duration-300 
+              transform hover:scale-105 hover:shadow-lg"
+            >
+              <span className="mr-2">More Projects</span>
+              <motion.span
+                animate={{
+                  x: [0, 5, 0],
+                  transition: {
+                    repeat: Infinity,
+                    duration: 1,
+                    ease: "easeInOut"
+                  }
+                }}
+              >
+                <FaArrowRight className="transition-transform group-hover:translate-x-1" />
+              </motion.span>
+            </Link>
+          </motion.div>
           </div>
         </div>
       </section>
