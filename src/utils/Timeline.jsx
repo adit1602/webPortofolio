@@ -36,24 +36,10 @@ const EditingResultsJourney = () => {
 
   const editingResultsData = [
     {
-      title: "Video Editing Basics",
-      date: "2022",
-      description: "Learned the basics of video editing using Adobe Premiere Pro.",
-      video: "https://www.youtube.com/embed/XWERBANyAY4",
-      icon: FaYoutube
-    },
-    {
-      title: "Color Grading and Correction",
-      date: "2024",
-      description: "Learned about color grading and correction techniques using Adobe Premiere Pro",
-      video: "https://www.youtube.com/embed/eTjX_RZ-Aao",
-      icon: FaYoutube
-    },
-    {
-      title: "Using Video Editing Techniques",
-      date: "2024",
-      description: "Learned video editing techniques using Adobe Premiere Pro.",
-      video: "https://www.youtube.com/embed/fiwWnCcFbk0",
+      title: "My First Big Project",
+      date: "2025",
+      description: "Learned about how shot with many actors.",
+      video: "https://www.youtube.com/embed/7ZLEr6J2Spc",
       icon: FaYoutube
     },
     {
@@ -64,12 +50,26 @@ const EditingResultsJourney = () => {
       icon: FaYoutube
     },
     {
-      title: "My First Big Project",
-      date: "2025",
-      description: "Learned about how shot with many actors.",
-      video: "https://www.youtube.com/embed/7ZLEr6J2Spc",
+      title: "Using Video Editing Techniques",
+      date: "2024",
+      description: "Learned video editing techniques using Adobe Premiere Pro.",
+      video: "https://www.youtube.com/embed/fiwWnCcFbk0",
       icon: FaYoutube
-    }
+    },
+    {
+      title: "Color Grading and Correction",
+      date: "2024",
+      description: "Learned about color grading and correction techniques using Adobe Premiere Pro",
+      video: "https://www.youtube.com/embed/eTjX_RZ-Aao",
+      icon: FaYoutube
+    },
+    {
+      title: "Video Editing Basics",
+      date: "2022",
+      description: "Learned the basics of video editing using Adobe Premiere Pro.",
+      video: "https://www.youtube.com/embed/XWERBANyAY4",
+      icon: FaYoutube
+    },
   ];
 
   return (
