@@ -114,6 +114,11 @@ const Footer = () => {
                 </RouterLink>
               </div>
               <div>
+                <RouterLink to='/more-projects'>
+                  <motion.li whileTap={{ scale: 0.98 }} whileHover={{ scale: 1.03 }} className="text-gray-400 hover:text-primary-500 transition">More Projects</motion.li>
+                </RouterLink>
+              </div>
+              <div>
                 <RouterLink to='/downloads'>
                   <motion.li whileTap={{ scale: 0.98 }} whileHover={{ scale: 1.03 }} className="text-gray-400 hover:text-primary-500 transition">Downloads</motion.li>
                 </RouterLink>
