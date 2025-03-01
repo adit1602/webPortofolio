@@ -4,6 +4,9 @@ import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-route
 import LoadingPage from './utils/LoadingPage';
 import NavbarOther from './components/NavbarOther';
 import Navbar from './components/Navbar';
+import FadeUp from './components/FadeUp';
+import DynamicBackground from './components/DynamicBackground';
+import InteractiveDivider from './components/InteractiveDivider';
 
 import Hero from './components/Hero';
 import About from './components/About';
@@ -85,19 +88,26 @@ function App() {
   }
 
   return (
-    <div className="relative overflow-x-hidden min-h-screen bg-gray-100">
+    <div className="relative overflow-x-hidden min-h-screen">
       <PreventInteractions />
 
       {location.pathname === '/' ? <Navbar /> : <NavbarOther />}
 
       <Routes>
         <Route path="/" element={
-          <>
+          <DynamicBackground>
             <Hero />
-            <About />
-            <Projects />
-            <Contact />
-          </>
+            <InteractiveDivider />
+            <FadeUp>
+              <About />
+            </FadeUp>
+            <FadeUp delay={200}>
+              <Projects />
+            </FadeUp>
+            <FadeUp delay={400}>
+              <Contact />
+            </FadeUp>
+          </DynamicBackground>
         } />
         <Route path="/downloads" element={<Downloads />} />
         <Route path="/unduh" element={<Unduh />} />

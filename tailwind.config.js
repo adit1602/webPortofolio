@@ -9,16 +9,17 @@ export default {
       colors: {
         primary: {
           DEFAULT: '#ff3d4d',
-          50: '#ffe4e6',
-          100: '#fecdd3',
-          200: '#fda4af',
-          300: '#fb7185',
-          400: '#f43f5e',
-          500: '#ff3d4d', // Your main red color
-          600: '#e11d48',
-          700: '#be123c',
-          800: '#9f1239',
-          900: '#881337'
+          50: '#fff1f2',
+          100: '#ffe4e6',
+          200: '#ffccd1',
+          300: '#ffa3ad',
+          400: '#ff6d7e',
+          500: '#ff3d4d', // Your primary color
+          600: '#ed1c2e',
+          700: '#c91124',
+          800: '#a61124',
+          900: '#8c1225',
+          950: '#4c0512',
         }
       }
     },
