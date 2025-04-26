@@ -13,7 +13,7 @@ const ProjectCard = ({ project, index, priority = false }) => {
   const cardRef = useRef(null);
   const isCardInView = useInView(cardRef, { once: false, amount: 0.2 });
   const [isHovered, setIsHovered] = useState(false);
-  
+
   // Create a YouTube embed URL that shows thumbnail and requires click to play
   const getYouTubeEmbedUrl = (url) => {
     if (!url) return null;
@@ -43,12 +43,12 @@ const ProjectCard = ({ project, index, priority = false }) => {
           {project.isVideoEdit ? (
             // For video editing projects, show the embedded YouTube player with thumbnail
             <div className="w-full h-full bg-black">
-              <iframe 
-                src={getYouTubeEmbedUrl(project.videoUrl)} 
-                className="w-full h-full" 
-                frameBorder="0" 
+              <iframe
+                src={getYouTubeEmbedUrl(project.videoUrl)}
+                className="w-full h-full"
+                frameBorder="0"
                 title={project.title}
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                 allowFullScreen
               />
             </div>
@@ -66,7 +66,7 @@ const ProjectCard = ({ project, index, priority = false }) => {
                 animate={{ scale: isHovered ? 1.05 : 1 }}
                 transition={{ duration: 0.4 }}
               />
-              
+
               {/* Hover Actions */}
               <motion.div
                 className="absolute inset-0 z-20 flex items-center justify-center opacity-0 gap-4"
@@ -85,7 +85,7 @@ const ProjectCard = ({ project, index, priority = false }) => {
                     <FaGithub className="w-5 h-5" />
                   </motion.a>
                 )}
-                
+
                 {project.link && (
                   <motion.a
                     href={project.link}
@@ -112,14 +112,14 @@ const ProjectCard = ({ project, index, priority = false }) => {
               <span>{project.date}</span>
             </div>
           </div>
-          
+
           <p className="text-gray-300 text-sm mb-4">{project.description}</p>
-          
+
           {/* Tech Tags */}
           <div className="flex flex-wrap gap-2 mb-4">
             {project.technologies.map((tech, index) => (
-              <span 
-                key={index} 
+              <span
+                key={index}
                 className="text-xs px-3 py-1 rounded-full 
                   bg-gradient-to-r from-blue-500/10 to-purple-500/10 border border-blue-400/20
                   text-blue-300"
@@ -128,7 +128,7 @@ const ProjectCard = ({ project, index, priority = false }) => {
               </span>
             ))}
           </div>
-          
+
           <div className="flex justify-between items-center">
             <span className="text-sm text-gray-400 flex items-center">
               {project.isVideoEdit ? (
@@ -137,18 +137,17 @@ const ProjectCard = ({ project, index, priority = false }) => {
                 <><FaCode className="mr-2" /> {project.type}</>
               )}
             </span>
-            
+
             {project.status && (
-              <span className={`text-xs px-2 py-1 rounded-full ${
-                project.status === 'Completed' ? 'bg-green-500/20 text-green-300' : 
-                project.status === 'In Progress' ? 'bg-yellow-500/20 text-yellow-300' : 
-                'bg-blue-500/20 text-blue-300'
-              }`}>
+              <span className={`text-xs px-2 py-1 rounded-full ${project.status === 'Completed' ? 'bg-green-500/20 text-green-300' :
+                  project.status === 'In Progress' ? 'bg-yellow-500/20 text-yellow-300' :
+                    'bg-blue-500/20 text-blue-300'
+                }`}>
                 {project.status}
               </span>
             )}
           </div>
-          
+
           {/* YouTube Link Button for Video Projects */}
           {project.isVideoEdit && project.youtubeLink && (
             <motion.a
@@ -176,7 +175,7 @@ const MoreProjects = () => {
   const isHeaderInView = useInView(headerRef, { once: false, amount: 0.3 });
   const isDevSectionInView = useInView(devSectionRef, { once: false, amount: 0.2 });
   const isVideoSectionInView = useInView(videoSectionRef, { once: false, amount: 0.2 });
-  
+
   // These are the same 4 projects from the main Projects component
   const projects = [
     {
@@ -296,7 +295,7 @@ const MoreProjects = () => {
     <div className="min-h-screen bg-gradient-to-b from-black to-gray-900 text-white pt-20 pb-16">
       {/* Header */}
       <div ref={headerRef} className="container mx-auto px-4 py-12 text-center">
-        <motion.h1 
+        <motion.h1
           className="text-3xl md:text-5xl font-bold mb-4"
           initial={{ opacity: 0, y: -20 }}
           animate={isHeaderInView ? { opacity: 1, y: 0 } : { opacity: 0, y: -20 }}
@@ -306,19 +305,19 @@ const MoreProjects = () => {
             Project Archive
           </span>
         </motion.h1>
-        <motion.p 
+        <motion.p
           className="text-gray-400 max-w-2xl mx-auto"
           initial={{ opacity: 0, y: 20 }}
           animate={isHeaderInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
           transition={{ duration: 0.6, delay: 0.2 }}
         >
-          Explore my complete collection of projects, including development work, 
+          Explore my complete collection of projects, including development work,
           video editing, and experiments I've created throughout my journey.
         </motion.p>
       </div>
 
       {/* Development Projects Section */}
-      <motion.section 
+      <motion.section
         ref={devSectionRef}
         className="container mx-auto px-4 py-12"
         initial={{ opacity: 0 }}
@@ -341,15 +340,15 @@ const MoreProjects = () => {
             Software development projects spanning web applications, tools, and platforms.
           </p>
         </motion.div>
-        
+
         <div className="max-w-6xl mx-auto">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-16">
             {projects.map((project, index) => (
-              <ProjectCard 
-                key={project.id} 
-                project={project} 
-                index={index} 
-                priority={index < 2} 
+              <ProjectCard
+                key={project.id}
+                project={project}
+                index={index}
+                priority={index < 2}
               />
             ))}
           </div>
@@ -357,14 +356,15 @@ const MoreProjects = () => {
       </motion.section>
 
       {/* Video Editing Projects Section */}
-      <motion.section 
+      <motion.section
         ref={videoSectionRef}
         className="container mx-auto px-4 py-12"
         initial={{ opacity: 0 }}
         animate={isVideoSectionInView ? { opacity: 1 } : { opacity: 0 }}
         transition={{ duration: 0.8 }}
+        id="edit"
       >
-          <motion.div
+        <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={isVideoSectionInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
           transition={{ duration: 0.5 }}
@@ -380,13 +380,13 @@ const MoreProjects = () => {
             Creative video edits showcasing my skills in motion graphics, visual effects, and storytelling.
           </p>
         </motion.div>
-        
+
         <div className="max-w-6xl mx-auto">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             {videoProjects.map((project, index) => (
-              <ProjectCard 
-                key={project.id} 
-                project={project} 
+              <ProjectCard
+                key={project.id}
+                project={project}
                 index={index}
               />
             ))}
@@ -404,9 +404,9 @@ const MoreProjects = () => {
             style={{ marginRight: "1rem" }}
           >
             <FaArrowLeft className="inline mr-2" />
-              Back to Home
+            Back to Home
           </motion.button>
-            </Link>
+        </Link>
         <Link to="/downloads">
           <motion.button
             className="px-6 py-3 bg-gray-800 text-white rounded-full hover:bg-gray-700 transition-all"
@@ -416,7 +416,7 @@ const MoreProjects = () => {
             <FaDownload className="inline mr-2" />
             Downloads
           </motion.button>
-            </Link>
+        </Link>
       </div>
     </div>
   );
