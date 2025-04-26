@@ -1,6 +1,6 @@
 import React, { useState, useRef } from 'react';
-import { motion, useInView } from 'framer-motion';
-import { FaExternalLinkAlt, FaArrowRight, FaGithub } from 'react-icons/fa';
+import { motion, useInView, useScroll, useTransform, useSpring } from 'framer-motion';
+import { FaExternalLinkAlt, FaArrowRight, FaGithub, FaCode, FaServer, FaRobot, FaGraduationCap } from 'react-icons/fa';
 import { Link } from 'react-router-dom';
 
 import projectPictPortov1 from '../../images/1stportofolio.png';
@@ -14,7 +14,7 @@ const ProjectCard = ({ project, index }) => {
   const cardRef = useRef(null);
   
   const isCardInView = useInView(cardRef, { 
-    once: false, 
+    once: true, 
     amount: 0.3,
     margin: "0px 0px -100px 0px" 
   });
@@ -31,13 +31,6 @@ const ProjectCard = ({ project, index }) => {
         duration: 0.5,
         delay: index * 0.1
       }
-    },
-    exit: {
-      opacity: 0,
-      y: -20,
-      transition: {
-        duration: 0.3
-      }
     }
   };
 
@@ -46,8 +39,7 @@ const ProjectCard = ({ project, index }) => {
       ref={cardRef}
       variants={variants}
       initial="hidden"
-      animate={isCardInView ? "visible" : "hidden"}
-      exit="exit"
+      animate={isCardInView ? "visible" : "visible"}
       className="w-full"
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
@@ -154,38 +146,97 @@ const ProjectCard = ({ project, index }) => {
 };
 
 const Projects = () => {
+  const [titleHover, setTitleHover] = useState(false);
   const sectionRef = useRef(null);
   const headingRef = useRef(null);
   
-  const isSectionInView = useInView(sectionRef, { once: false, amount: 0.1 });
   const isHeadingInView = useInView(headingRef, { once: false, amount: 0.8 });
+  const isSectionInView = useInView(sectionRef, { once: false, amount: 0.1 });
+  
+  const { scrollYProgress } = useScroll({
+    target: sectionRef,
+    offset: ["start end", "end start"]
+  });
+
+  const y = useTransform(scrollYProgress, [0, 1], [100, -100]);
+  const opacity = useTransform(scrollYProgress, [0, 0.2, 0.9, 1], [0, 1, 1, 0]);
+  const scale = useTransform(scrollYProgress, [0, 0.2], [0.8, 1]);
+  
+  const smoothY = useSpring(y, { stiffness: 100, damping: 30 });
+  const smoothScale = useSpring(scale, { stiffness: 100, damping: 30 });
+  
+  // Hover animation variant
+  const cardVariants = {
+    initial: {
+      scale: 1,
+      rotate: 0,
+      boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)'
+    },
+    hover: {
+      scale: 1.02,
+      rotate: 0,
+      boxShadow: '0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)'
+    },
+    tap: {
+      scale: 0.98,
+      rotate: 0,
+      transition: {
+        duration: 0.2,
+        ease: "easeInOut"
+      }
+    },
+  };
+
+  // Container animation variant
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.1
+      }
+    }
+  };
+
+  // Item animation variant
+  const itemVariants = {
+    hidden: { opacity: 0, y: 20 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: { duration: 0.5 }
+    }
+  };
 
   const projects = [
     {
       id: 1,
       title: "Portfolio Website 2.0",
-      description: "My personal portfolio website built with React and Tailwind CSS, featuring smooth animations and responsive design. It showcases my projects, skills, and experiences.",
+      description: "My personal portfolio website built with React and Tailwind CSS, featuring smooth animations and responsive design.",
       image: projectPictPortov2,
       technologies: ["React", "Tailwind CSS", "Framer Motion"],
       github: "https://github.com/AnakTentara/Portofolio-2.0",
-      link: "https://haikaldev.my.id"
+      link: "https://haikaldev.my.id",
+      icon: FaCode
     },
     {
       id: 2,
       title: "NaturalSMP Minecraft Server",
-      description: "A custom Minecraft server network with unique gameplay features, custom plugins, and a dedicated community. Supports multiple game modes and events.",
+      description: "A custom Minecraft server network with unique gameplay features, custom plugins, and a dedicated community.",
       image: projectPictNaturalSMP,
       technologies: ["Java", "PaperMC"],
-      link: "https://web.naturalsmp.xyz"
+      link: "https://web.naturalsmp.xyz",
+      icon: FaServer
     },
     {
       id: 3,
       title: "First Portfolio Website",
-      description: "My first portfolio website, designed and built from scratch to showcase my early development skills and projects.",
+      description: "My first portfolio website, designed and built from scratch to showcase my early development skills.",
       image: projectPictPortov1,
       technologies: ["HTML", "CSS", "JavaScript"],
       github: "https://github.com/AnakTentara/Portofolio",
-      link: "https://v1.haikaldev.my.id"
+      link: "https://v1.haikaldev.my.id",
+      icon: FaCode
     },
     {
       id: 4,
@@ -194,57 +245,148 @@ const Projects = () => {
       image: projectPictNaniKore,
       technologies: ["React", "TailwindCSS", "Node.js"],
       github: "https://github.com/AnakTentara/NaniKore-Group",
-      link: "https://group.haikaldev.my.id"
+      link: "https://group.haikaldev.my.id",
+      icon: FaRobot
     }
   ];
 
   return (
-    <section id="projects" ref={sectionRef} className="py-28 bg-transparent">
-      {/* Hero Section with perfect centering */}
-      <div className="flex justify-center w-full mb-16">
-        <div 
-          ref={headingRef} 
-          className="w-full max-w-3xl mx-auto px-4 flex flex-col items-center py-10 relative"
-        >
-          {/* Visual center guide - left */}
-          <div className="hidden md:block absolute left-0 top-1/2 transform -translate-y-1/2 w-[5%] h-[1px] bg-gradient-to-r from-transparent to-blue-500/50"></div>
-          
-          {/* Content */}
-          <motion.h2
-            initial={{ opacity: 0, y: -20 }}
-            animate={isHeadingInView ? { opacity: 1, y: 0 } : { opacity: 0, y: -20 }}
-            transition={{ duration: 0.5 }}
-            className="text-4xl md:text-5xl font-bold text-center w-full"
+    <motion.section
+      ref={sectionRef}
+      id="projects"
+      className="py-20 bg-transparent relative"
+      initial="hidden"
+      animate="visible"
+      variants={containerVariants}
+    >
+      <motion.div
+        className="container mx-auto px-4 max-w-6xl"
+        style={{
+          y: smoothY,
+          scale: smoothScale,
+          opacity
+        }}
+      >
+        <motion.div className="text-center mb-16" variants={itemVariants}>
+          <div 
+            ref={headingRef} 
+            className="w-full max-w-3xl mx-auto px-4 flex flex-col items-center py-10 relative"
           >
-            <strong className='font-bold bg-gradient-to-r from-blue-400 via-purple-600 to-pink-500 bg-clip-text text-transparent uppercase tracking-wider'>My Projects</strong>
-          </motion.h2>
+            {/* Visual center guide - left */}
+            <div className="hidden md:block absolute left-0 top-1/2 transform -translate-y-1/2 w-[5%] h-[1px] bg-gradient-to-r from-transparent to-blue-500/50"></div>
+            
+            {/* Content */}
+            <motion.h2
+              initial={{ opacity: 0, y: -20 }}
+              animate={isHeadingInView ? { opacity: 1, y: 0 } : { opacity: 0, y: -20 }}
+              transition={{ duration: 0.5 }}
+              className="text-4xl md:text-5xl font-bold text-center w-full"
+            >
+              <strong className='font-bold bg-gradient-to-r from-blue-400 via-purple-600 to-pink-500 bg-clip-text text-transparent uppercase tracking-wider'>My Projects</strong>
+            </motion.h2>
 
-          <motion.div 
-            className="w-24 h-1 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full my-6"
-            initial={{ width: 0 }}
-            animate={isHeadingInView ? { width: 96 } : { width: 0 }}
-            transition={{ duration: 0.6, delay: 0.2 }}
-          />
+            <motion.div 
+              className="w-24 h-1 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full my-6"
+              initial={{ width: 0 }}
+              animate={isHeadingInView ? { width: 96 } : { width: 0 }}
+              transition={{ duration: 0.6, delay: 0.2 }}
+            />
 
-          <motion.p 
-            initial={{ opacity: 0, y: 20 }}
-            animate={isHeadingInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
-            transition={{ duration: 0.5, delay: 0.3 }}
-            className="text-gray-300 text-lg text-center max-w-2xl"
-          >
-            Here are some of my recent projects. Each project represents my skills and passion for creating innovative solutions.
-          </motion.p>
-          
-          {/* Visual center guide - right */}
-          <div className="hidden md:block absolute right-0 top-1/2 transform -translate-y-1/2 w-[5%] h-[1px] bg-gradient-to-l from-transparent to-purple-500/50"></div>
-        </div>
-      </div>
+            <motion.p 
+              initial={{ opacity: 0, y: 20 }}
+              animate={isHeadingInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
+              transition={{ duration: 0.5, delay: 0.3 }}
+              className="text-gray-300 text-lg text-center max-w-2xl"
+            >
+              Here are some of my recent projects. Each project represents my skills and passion for creating innovative solutions.
+            </motion.p>
+            
+            {/* Visual center guide - right */}
+            <div className="hidden md:block absolute right-0 top-1/2 transform -translate-y-1/2 w-[5%] h-[1px] bg-gradient-to-l from-transparent to-purple-500/50"></div>
+          </div>
+        </motion.div>
 
-      {/* Project Grid Container */}
-      <div className="container mx-auto px-4">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-6">
+        {/* Projects Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
           {projects.map((project, index) => (
-            <ProjectCard key={project.id} project={project} index={index} />
+            <motion.div
+              key={project.id}
+              variants={cardVariants}
+              whileHover="hover"
+              whileTap="tap"
+              className="relative rounded-2xl overflow-hidden"
+            >
+              {/* Glowing border effect */}
+              <motion.div 
+                className="absolute inset-0 rounded-2xl bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 opacity-30"
+                animate={{ 
+                  opacity: [0.2, 0.4, 0.2],
+                  rotate: [0, 2, 0],
+                }}
+                transition={{ 
+                  duration: 5, 
+                  repeat: Infinity,
+                  repeatType: "reverse" 
+                }}
+              />
+              
+              <div className="p-6 relative z-10 bg-gray-900/90 backdrop-blur-sm rounded-2xl">
+                <div className="flex flex-col space-y-4">
+                  {/* Project Image */}
+                  <div className="relative h-48 overflow-hidden rounded-xl">
+                    <motion.img
+                      src={project.image}
+                      alt={project.title}
+                      className="w-full h-full object-cover"
+                      whileHover={{ scale: 1.1 }}
+                      transition={{ duration: 0.3 }}
+                    />
+                  </div>
+
+                  <div className="flex items-start space-x-4">
+                    <div className="p-4 rounded-xl bg-gradient-to-r from-blue-500/20 to-purple-500/20">
+                      <project.icon className="text-2xl text-white" size={28} />
+                    </div>
+                    <div className="flex-1">
+                      <h3 className="text-xl font-bold text-white mb-2">{project.title}</h3>
+                      <p className="text-gray-300 text-sm mb-4">{project.description}</p>
+                      
+                      {/* Tech Tags */}
+                      <div className="flex flex-wrap gap-2 mb-4">
+                        {project.technologies.map((tech, index) => (
+                          <span
+                            key={index}
+                            className="text-xs px-2 py-1 rounded-full 
+                              bg-gradient-to-r from-blue-500/10 to-purple-500/10 border border-blue-400/20
+                              text-blue-300"
+                          >
+                            {tech}
+                          </span>
+                        ))}
+                      </div>
+                      
+                      {/* Links */}
+                      <div className="flex items-center gap-4">
+                        {project.github && (
+                          <a href={project.github} target="_blank" rel="noopener noreferrer"
+                             className="flex items-center gap-2 px-4 py-2 rounded-lg bg-gray-800/50 text-gray-300 hover:bg-gray-700/50 transition-colors">
+                            <FaGithub size={20} />
+                            <span>GitHub</span>
+                          </a>
+                        )}
+                        {project.link && (
+                          <a href={project.link} target="_blank" rel="noopener noreferrer"
+                             className="flex items-center gap-2 px-4 py-2 rounded-lg bg-blue-600/50 text-white hover:bg-blue-600/70 transition-colors">
+                            <FaExternalLinkAlt size={20} />
+                            <span>Visit Project</span>
+                          </a>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </motion.div>
           ))}
         </div>
 
@@ -266,8 +408,8 @@ const Projects = () => {
             </motion.div>
           </Link>
         </motion.div>
-      </div>
-    </section>
+      </motion.div>
+    </motion.section>
   );
 };
 

@@ -21,8 +21,8 @@ const Navbar = () => {
     
     const observerOptions = {
       root: null,
-      rootMargin: '-100px 0px -100px 0px', // Adjust this to better detect sections
-      threshold: 0.3, // Lower threshold so sections are detected earlier
+      rootMargin: '-50px 0px -50px 0px', // Reduced margin for better detection
+      threshold: 0.2, // Lower threshold for earlier detection
     };
     
     const observerCallback = (entries) => {
@@ -129,8 +129,8 @@ const Navbar = () => {
                   to={link.id}
                   spy={true}
                   smooth={true}
-                  offset={-100}
-                  duration={500}
+                  offset={-80}
+                  duration={800}
                   className="relative group cursor-pointer"
                 >
                   <motion.span 

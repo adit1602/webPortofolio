@@ -1,6 +1,6 @@
 {
-  "name": "portofolio-v2",
-  "version": "3.0.2",
+  "name": "portofolio-v3",
+  "version": "3.2.0",
   "description": "Portofolio Haikal Mabrur Versi Terbaru",
   "main": "postcss.config.js",
   "type": "module",
@@ -17,6 +17,7 @@
   "license": "ISC",
   "dependencies": {
     "aos": "^2.3.4",
+    "axios": "^1.9.0",
     "framer-motion": "^10.18.0",
     "lucide-react": "^0.469.0",
     "path": "^0.12.7",

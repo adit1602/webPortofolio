@@ -108,6 +108,7 @@ const SocialLink = ({ icon: Icon, href, color, delay }) => {
 const Contact = () => {
   const sectionRef = useRef(null);
   const titleRef = useRef(null);
+  const headingRef = useRef(null);
   const ctaRef = useRef(null);
   const dividerRef = useRef(null);
   const socialsRef = useRef(null);
@@ -166,22 +167,43 @@ const Contact = () => {
         
         {/* Section header */}
         <div className="text-center mb-16" ref={titleRef}>
-        <motion.div
-            initial={{ opacity: 0, y: -20 }}
-            animate={isTitleInView ? { opacity: 1, y: 0 } : { opacity: 0, y: -20 }}
-            transition={{ duration: 0.5 }}
-            className="inline-block"
+          <div 
+            ref={headingRef} 
+            className="w-full max-w-3xl mx-auto px-4 flex flex-col items-center py-10 relative"
           >
-            <h2 className="text-4xl md:text-5xl font-bold text-white relative inline-block mb-4">
-              <span className="bg-gradient-to-r from-blue-400 via-purple-500 to-pink-500 bg-clip-text text-transparent">
-                Let's Connect
-              </span>
-            </h2>
-            <p className="text-gray-400 mt-4 max-w-2xl mx-auto">
+            {/* Visual center guide - left */}
+            <div className="hidden md:block absolute left-0 top-1/2 transform -translate-y-1/2 w-[5%] h-[1px] bg-gradient-to-r from-transparent to-blue-500/50"></div>
+            
+            {/* Content */}
+            <motion.h2
+              initial={{ opacity: 0, y: -20 }}
+              animate={isTitleInView ? { opacity: 1, y: 0 } : { opacity: 0, y: -20 }}
+              transition={{ duration: 0.5 }}
+              className="text-4xl md:text-5xl font-bold text-center w-full"
+            >
+              <strong className='font-bold bg-gradient-to-r from-blue-400 via-purple-600 to-pink-500 bg-clip-text text-transparent uppercase tracking-wider'>Let's Connect</strong>
+            </motion.h2>
+
+            <motion.div 
+              className="w-24 h-1 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full my-6"
+              initial={{ width: 0 }}
+              animate={isTitleInView ? { width: 96 } : { width: 0 }}
+              transition={{ duration: 0.6, delay: 0.2 }}
+            />
+
+            <motion.p 
+              initial={{ opacity: 0, y: 20 }}
+              animate={isTitleInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
+              transition={{ duration: 0.5, delay: 0.3 }}
+              className="text-gray-300 text-lg text-center max-w-2xl"
+            >
               Feel free to reach out for collaborations, inquiries, or just a friendly hello! 
               Here are the best ways to connect with me.
-            </p>
-          </motion.div>
+            </motion.p>
+            
+            {/* Visual center guide - right */}
+            <div className="hidden md:block absolute right-0 top-1/2 transform -translate-y-1/2 w-[5%] h-[1px] bg-gradient-to-l from-transparent to-purple-500/50"></div>
+          </div>
         </div>
         
         {/* Contact info cards grid */}

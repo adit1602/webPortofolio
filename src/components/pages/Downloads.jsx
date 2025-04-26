@@ -1,5 +1,5 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { motion, AnimatePresence, useInView } from 'framer-motion';
+import React, { useState } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { 
   FaFolder, 
   FaFile, 
@@ -12,410 +12,315 @@ import {
   FaFileImage, 
   FaFileArchive,
   FaSearch,
-  FaCheck,
-  FaExternalLinkAlt,
-  FaGithub
+  FaChevronRight,
+  FaFolderOpen,
+  FaVideo
 } from 'react-icons/fa';
 import { Link } from 'react-router-dom';
-import LoadingPage from '../LoadingPage';
-
-// Import our static file data
-import downloadFiles from '../../data/downloadFiles';
+import { downloadFile, getFileSize, getFileType } from '../../utils/fileSystem';
+import downloadFiles from '../../utils/downloadFiles';
 
 const getFileIcon = (fileName) => {
-  if (!fileName) return <FaFile size={24} className="text-gray-400" />;
+  const fileType = getFileType(fileName);
   
-  const extension = fileName.split('.').pop().toLowerCase();
-  
-  switch (extension) {
-    case 'pdf':
-      return <FaFilePdf size={24} className="text-red-500" />;
-    case 'jpg':
-    case 'jpeg':
-    case 'png':
-    case 'gif':
-    case 'webp':
-    case 'svg':
-      return <FaFileImage size={24} className="text-blue-400" />;
-    case 'mp4':
-    case 'webm':
-    case 'avi':
-    case 'mov':
-      return <FaFileImage size={24} className="text-purple-500" />;
-    case 'mp3':
-    case 'wav':
-    case 'ogg':
-      return <FaFileImage size={24} className="text-green-500" />;
-    case 'zip':
-    case 'rar':
-    case '7z':
-    case 'tar':
-    case 'gz':
-      return <FaFileArchive size={24} className="text-yellow-600" />;
-    case 'doc':
-    case 'docx':
-      return <FaFileWord size={24} className="text-blue-600" />;
-    case 'xls':
-    case 'xlsx':
-      return <FaFileExcel size={24} className="text-green-600" />;
-    case 'ppt':
-    case 'pptx':
-      return <FaFileImage size={24} className="text-orange-600" />;
-    case 'js':
-    case 'jsx':
-    case 'ts':
-    case 'tsx':
-    case 'html':
-    case 'css':
-    case 'json':
-      return <FaFile size={24} className="text-indigo-400" />;
+  switch (fileType) {
+    case 'image':
+      return <FaFileImage size={20} className="text-blue-400" />;
+    case 'document':
+      return <FaFileWord size={20} className="text-blue-600" />;
+    case 'spreadsheet':
+      return <FaFileExcel size={20} className="text-green-600" />;
+    case 'archive':
+      return <FaFileArchive size={20} className="text-yellow-600" />;
+    case 'video':
+      return <FaVideo size={20} className="text-red-400" />;
     default:
-      return <FaFile size={24} className="text-gray-400" />;
+      return <FaFile size={20} className="text-gray-400" />;
   }
 };
 
-const FilePreview = ({ fileName }) => {
-  const icon = getFileIcon(fileName);
-  
+const FilePreview = ({ file }) => {
+  const isImage = file.type === 'file' && (
+    file.name.toLowerCase().endsWith('.png') ||
+    file.name.toLowerCase().endsWith('.jpg') ||
+    file.name.toLowerCase().endsWith('.jpeg') ||
+    file.name.toLowerCase().endsWith('.gif')
+  );
+
+  const isVideo = file.type === 'file' && (
+    file.name.toLowerCase().endsWith('.mp4') ||
+    file.name.toLowerCase().endsWith('.webm') ||
+    file.name.toLowerCase().endsWith('.mov')
+  );
+
+  if (isImage) {
+    return (
+      <div className="w-8 h-8 rounded-lg overflow-hidden">
+        <img 
+          src={file.path} 
+          alt={file.name}
+          className="w-full h-full object-cover"
+          onError={(e) => {
+            e.target.src = 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCI+PHBhdGggZmlsbD0iI2ZmZiIgZD0iTTEyIDJDNi40OCAyIDIgNi40OCAyIDEyczQuNDggMTAgMTAgMTAgMTAtNC40OCAxMC0xMFMxNy41MiAyIDEyIDJ6bTAgMThjLTQuNDEgMC04LTMuNTktOC04czMuNTktOCA4LTggOCAzLjU5IDggOC0zLjU5IDgtOCA4eiIvPjxwYXRoIGZpbGw9IiNmZmYiIGQ9Ik0xMiAxMGMtMS4xIDAtMiAuOS0yIDJzLjkgMiAyIDIgMi0uOSAyLTIgMi0yLTIgMnptMCA2Yy0yLjIxIDAtNC0xLjc5LTQtNHMxLjc5LTQgNC00IDQgMS43OSA0IDQtMS43OSA0LTQgNHoiLz48L3N2Zz4=';
+          }}
+        />
+      </div>
+    );
+  }
+
+  if (isVideo) {
+    return (
+      <div className="w-8 h-8 rounded-lg overflow-hidden relative">
+        <video 
+          src={file.path}
+          className="w-full h-full object-cover"
+          muted
+          loop
+          playsInline
+        />
+        <div className="absolute inset-0 flex items-center justify-center bg-black/30">
+          <FaVideo className="text-white text-sm" />
+        </div>
+      </div>
+    );
+  }
+
   return (
-    <div className="flex items-center justify-center w-10 h-10 rounded-lg overflow-hidden">
-      {icon}
+    <div className="flex items-center justify-center w-8 h-8 rounded-lg overflow-hidden">
+      {getFileIcon(file.name)}
     </div>
   );
 };
 
-const formatFileSize = (bytes) => {
-  if (typeof bytes !== 'number') return 'Unknown';
-  
-  if (bytes < 1024) return bytes + ' B';
-  else if (bytes < 1048576) return (bytes / 1024).toFixed(1) + ' KB';
-  else if (bytes < 1073741824) return (bytes / 1048576).toFixed(1) + ' MB';
-  else return (bytes / 1073741824).toFixed(1) + ' GB';
+const FolderItem = ({ folder, onOpen, isOpen }) => {
+  return (
+    <motion.div
+      whileHover={{ scale: 1.01 }}
+      className="flex items-center space-x-3 p-2 bg-white/5 backdrop-blur-sm rounded-lg hover:bg-white/10 transition-all duration-200 cursor-pointer"
+      onClick={() => onOpen(folder)}
+    >
+      <div className="p-2 rounded-lg bg-blue-500/20 text-blue-400">
+        {isOpen ? <FaFolderOpen className="text-lg" /> : <FaFolder className="text-lg" />}
+      </div>
+      <div>
+        <p className="font-medium text-white">{folder.name}</p>
+        <p className="text-xs text-gray-400">{folder.items?.length || 0} items</p>
+      </div>
+      <FaChevronRight className="text-gray-400 ml-auto" />
+    </motion.div>
+  );
+};
+
+const FileItem = ({ file, onDownload }) => {
+  return (
+    <motion.div
+      whileHover={{ scale: 1.01 }}
+      className="flex items-center space-x-3 p-2 bg-white/5 backdrop-blur-sm rounded-lg hover:bg-white/10 transition-all duration-200"
+    >
+      <div className="p-2 rounded-lg">
+        <FilePreview file={file} />
+      </div>
+      <div className="flex-1">
+        <p className="font-medium text-white">{file.name}</p>
+        <p className="text-xs text-gray-400">{getFileSize(file.size)}</p>
+      </div>
+      <motion.button
+        whileHover={{ scale: 1.1 }}
+        whileTap={{ scale: 0.9 }}
+        onClick={() => onDownload(file)}
+        className="p-2 rounded-lg bg-green-500/20 text-green-400 hover:bg-green-500/30 transition-colors"
+      >
+        <FaDownload />
+      </motion.button>
+    </motion.div>
+  );
 };
 
 const Downloads = () => {
-  const [currentFolder, setCurrentFolder] = useState('root');
+  const [currentPath, setCurrentPath] = useState(['root']);
   const [downloadingFile, setDownloadingFile] = useState(null);
-  const [fileStructure, setFileStructure] = useState(downloadFiles);
-  const [isLoading, setIsLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
-  const [sortConfig, setSortConfig] = useState({ key: 'name', direction: 'asc' });
   
-  const sectionRef = useRef(null);
-  const isInView = useInView(sectionRef, { once: false, amount: 0.2 });
+  const getCurrentFolder = () => {
+    if (currentPath.length === 1) {
+      return { items: downloadFiles.root };
+    }
 
-  const sortFiles = (files, key, direction) => {
-    if (!files) return [];
-    
-    return [...files].sort((a, b) => {
-      // Always sort folders first
-      if (a.type === 'folder' && b.type !== 'folder') return -1;
-      if (a.type !== 'folder' && b.type === 'folder') return 1;
-      
-      // Then sort by the selected key
-      if (a[key] < b[key]) return direction === 'asc' ? -1 : 1;
-      if (a[key] > b[key]) return direction === 'asc' ? 1 : -1;
-      return 0;
-    });
+    let current = downloadFiles.root;
+    for (let i = 1; i < currentPath.length; i++) {
+      const path = currentPath[i];
+      const found = current.find(item => item.name === path);
+      if (!found) return null;
+      current = found.items;
+    }
+    return { items: current };
   };
-  
-  useEffect(() => {
-    // Simulate loading for better UX
-    setTimeout(() => {
-      setIsLoading(false);
-    }, 1500);
-  }, []);
 
-  if (isLoading) {
-    return <LoadingPage />;
-  }
+  const handleFolderOpen = (folder) => {
+    setCurrentPath([...currentPath, folder.name]);
+  };
 
-  const handleDownload = (file) => {
+  const handleFolderBack = () => {
+    if (currentPath.length > 1) {
+      setCurrentPath(currentPath.slice(0, -1));
+    }
+  };
+
+  const handleDownload = async (file) => {
     setDownloadingFile(file);
-    
-    setTimeout(() => {
-      try {
-        if (file.isExternal) {
-          window.open(file.path, '_blank');
-          setDownloadingFile(null);
-          return;
-        }
-        
-        // For local files
-        const link = document.createElement('a');
-        link.href = file.path;
-        link.download = file.name;
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-      } catch (error) {
-        console.error('Download error:', error);
-      } finally {
-        setDownloadingFile(null);
-      }
-    }, 2000);
+    try {
+      await downloadFile(file.path);
+    } catch (error) {
+      console.error('Download error:', error);
+    } finally {
+      setDownloadingFile(null);
+    }
   };
 
-  const filteredFiles = (files) => {
-    if (!searchTerm) return files;
-    return files.filter(file => 
-      file.name.toLowerCase().includes(searchTerm.toLowerCase())
+  const renderBreadcrumbs = () => {
+    return (
+      <div className="flex items-center space-x-2 text-sm text-gray-400 mb-4">
+        {currentPath.map((path, index) => (
+          <React.Fragment key={index}>
+            {index > 0 && <span className="mx-2">/</span>}
+            <button
+              onClick={() => setCurrentPath(currentPath.slice(0, index + 1))}
+              className={`hover:text-white transition-colors ${
+                index === currentPath.length - 1 ? 'text-white font-medium' : ''
+              }`}
+            >
+              {path === 'root' ? 'Downloads' : path}
+            </button>
+          </React.Fragment>
+        ))}
+      </div>
     );
   };
 
-  const renderFiles = (files) => {
-    // Apply sorting and filtering
-    const sortedFiles = sortFiles(files, sortConfig.key, sortConfig.direction);
-    const filtered = filteredFiles(sortedFiles);
-
-    if (!filtered || filtered.length === 0) {
+  const renderContent = () => {
+    const currentFolder = getCurrentFolder();
+    if (!currentFolder || !currentFolder.items) {
       return (
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          className="text-center py-10"
-        >
-          <p className="text-gray-400 text-lg">No files found</p>
-          {searchTerm && (
-            <p className="text-gray-500 mt-2">Try a different search term</p>
-          )}
-        </motion.div>
+        <div className="text-center py-8">
+          <p className="text-gray-400">No items found</p>
+        </div>
       );
     }
 
-    return filtered.map((file, index) => (
-      <motion.div
-        key={index}
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: index * 0.05, duration: 0.3 }}
-        whileHover={{ scale: 1.02, y: -2 }}
-        whileTap={{ scale: 0.98 }}
-        className="bg-gradient-to-br from-gray-800/70 to-gray-900/70 backdrop-blur-md rounded-xl p-4 border border-gray-700/30 mb-3 cursor-pointer overflow-hidden relative"
-        onClick={() => file.type === 'folder' && setCurrentFolder(file.name)}
-      >
-        {/* Hover effect */}
-        <motion.div 
-          className="absolute inset-0 bg-gradient-to-tr from-blue-500/5 to-purple-500/5 opacity-0 transition-opacity duration-300"
-          whileHover={{ opacity: 1 }}
-        />
-        
-        <div className="flex items-center justify-between">
-          <div className="flex items-center">
-            {file.type === 'folder' ? (
-              <div className="p-2 rounded-lg bg-yellow-500/20 text-yellow-400 mr-3">
-                <FaFolder size={24} />
-              </div>
-            ) : (
-              <div className="p-1 rounded-lg mr-3">
-                <FilePreview fileName={file.name} />
-              </div>
-            )}
-            <div>
-              <p className="font-semibold text-white">{file.name}</p>
-              {file.size && <p className="text-sm text-blue-300">{file.size}</p>}
-              {file.description && <p className="text-sm text-gray-400">{file.description}</p>}
-            </div>
+    let items = [...currentFolder.items];
+    if (searchTerm) {
+      items = items.filter(item => 
+        item.name.toLowerCase().includes(searchTerm.toLowerCase())
+      );
+    }
+
+    const folders = items.filter(item => item.type === 'folder');
+    const files = items.filter(item => item.type === 'file');
+
+    return (
+      <div className="space-y-4">
+        {folders.length > 0 && (
+          <div className="space-y-2">
+            <h3 className="text-sm font-medium text-gray-400">Folders</h3>
+            {folders.map((folder, index) => (
+              <FolderItem
+                key={index}
+                folder={folder}
+                onOpen={handleFolderOpen}
+                isOpen={currentPath.includes(folder.name)}
+              />
+            ))}
           </div>
-          
-          {file.type === 'file' && (
-            <motion.button
-              whileHover={{ scale: 1.1, rotate: 5 }}
-              whileTap={{ scale: 0.9, rotate: -5 }}
-              onClick={(e) => {
-                e.stopPropagation();
-                handleDownload(file);
-              }}
-              className="p-2 rounded-full bg-gradient-to-r from-green-600/20 to-green-500/20 text-green-400 hover:text-green-300 transition-colors"
-            >
-              {file.isExternal ? <FaExternalLinkAlt size={18} /> : <FaDownload size={18} />}
-            </motion.button>
-          )}
-        </div>
-      </motion.div>
-    ));
-  };
+        )}
 
-  // Find the current folder data
-  const getCurrentFolderData = () => {
-    if (currentFolder === 'root') {
-      return fileStructure.root;
-    }
-    
-    // Find the folder in the root
-    const folder = fileStructure.root.find(f => f.name === currentFolder);
-    if (folder) return folder.items;
-    
-    // If not in root, check nested folders
-    for (const rootFolder of fileStructure.root) {
-      if (rootFolder.type === 'folder' && rootFolder.items) {
-        const nestedFolder = rootFolder.items.find(f => f.name === currentFolder);
-        if (nestedFolder) return nestedFolder.items;
-      }
-    }
-    
-    return [];
-  };
+        {files.length > 0 && (
+          <div className="space-y-2">
+            <h3 className="text-sm font-medium text-gray-400">Files</h3>
+            {files.map((file, index) => (
+              <FileItem
+                key={index}
+                file={file}
+                onDownload={handleDownload}
+              />
+            ))}
+          </div>
+        )}
 
-  // Get breadcrumb path
-  const getBreadcrumbPath = () => {
-    if (currentFolder === 'root') {
-      return [];
-    }
-    
-    // Check if it's a direct child of root
-    const isDirectChild = fileStructure.root.some(f => f.name === currentFolder);
-    if (isDirectChild) {
-      return [currentFolder];
-    }
-    
-    // If not, find the parent
-    for (const rootFolder of fileStructure.root) {
-      if (rootFolder.type === 'folder' && rootFolder.items) {
-        const nestedFolder = rootFolder.items.find(f => f.name === currentFolder);
-        if (nestedFolder) {
-          return [rootFolder.name, currentFolder];
-        }
-      }
-    }
-    
-    return [currentFolder]; // Fallback
+        {items.length === 0 && (
+          <div className="text-center py-8">
+            <p className="text-gray-400">No items found</p>
+            {searchTerm && (
+              <p className="text-gray-500 mt-2">Try a different search term</p>
+            )}
+          </div>
+        )}
+      </div>
+    );
   };
 
   return (
-    <div 
-      ref={sectionRef}
-      className="min-h-screen bg-gradient-to-b from-gray-900 to-black text-white pt-24 pb-16 overflow-hidden"
-    >
-      {/* Animated background elements */}
-      <div className="fixed inset-0 z-0 overflow-hidden pointer-events-none">
-        <div className="absolute top-20 -left-20 w-80 h-80 rounded-full bg-blue-500/10 blur-3xl"></div>
-        <div className="absolute bottom-40 -right-20 w-96 h-96 rounded-full bg-purple-500/10 blur-3xl"></div>
-        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-full h-full bg-gradient-to-b from-transparent to-black/80 z-0"></div>
-      </div>
-      
-      <div className="container mx-auto px-4 relative z-10">
-        {/* Hero header */}
+    <div className="min-h-screen bg-gradient-to-b from-gray-900 to-black text-white pt-24 md:pt-32 pb-16">
+      <div className="container mx-auto px-4">
+        {/* Header */}
         <motion.div
-          initial={{ opacity: 0, y: 30 }}
+          initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.7 }}
-          className="text-center mb-12"
+          transition={{ duration: 0.5 }}
+          className="mb-6 md:mb-8"
         >
-          <motion.h1 
-            whileHover={{ scale: 1.03 }}
-            className="text-5xl font-bold mb-4"
-          >
-            <span className="bg-gradient-to-r from-blue-400 via-purple-600 to-pink-500 bg-clip-text text-transparent">
-              Downloads
-            </span>
-          </motion.h1>
-          
-          <motion.p 
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.3, duration: 0.7 }}
-            className="text-xl text-gray-300 max-w-3xl mx-auto"
-          >
-            Browse and download available resources
-          </motion.p>
-        </motion.div>
-        
-        <motion.div
-          variants={{
-            hidden: { opacity: 0, y: 20 },
-            visible: { opacity: 1, y: 0 }
-          }}
-          initial="hidden"
-          animate={isInView ? "visible" : "hidden"}
-          transition={{ duration: 0.6 }}
-          className="max-w-3xl mx-auto mb-16"
-        >
-          {/* Navigation and Search Bar */}
-          <div className="bg-gradient-to-br from-gray-800/80 to-gray-900/80 backdrop-blur-md rounded-xl p-4 border border-gray-700/30 mb-6 shadow-xl">
-            <div className="flex items-center justify-between mb-4">
-              <div className="flex items-center">
-                {currentFolder !== 'root' && (
-                  <motion.button
-                    whileHover={{ scale: 1.1, x: -2 }}
-                    whileTap={{ scale: 0.9 }}
-                    onClick={() => {
-                      const breadcrumbs = getBreadcrumbPath();
-                      if (breadcrumbs.length > 1) {
-                        // Go to parent folder
-                        setCurrentFolder(breadcrumbs[0]);
-                      } else {
-                        // Go to root
-                        setCurrentFolder('root');
-                      }
-                    }}
-                    className="p-2 mr-2 rounded-full bg-gray-700/50 text-gray-300 hover:text-white"
-                  >
-                    <FaArrowLeft />
-                  </motion.button>
-                )}
-                <h2 className="text-2xl font-bold bg-gradient-to-r from-blue-300 to-purple-400 bg-clip-text text-transparent">
-                  {currentFolder === 'root' ? 'Files & Resources' : currentFolder}
-                </h2>
-              </div>
-              
-              <Link to="/">
+          <div className="flex items-center justify-between mb-4 md:mb-6">
+            <div className="flex items-center space-x-2 md:space-x-4">
+              {currentPath.length > 1 && (
                 <motion.button
-                  whileHover={{ scale: 1.1, y: -2 }}
-                  whileTap={{ scale: 0.9 }}
-                  className="p-2 rounded-full bg-blue-600/20 text-blue-400 hover:text-blue-300"
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  onClick={handleFolderBack}
+                  className="p-2 rounded-lg bg-white/5 hover:bg-white/10 transition-colors"
                 >
-                  <FaHome size={18} />
+                  <FaArrowLeft />
                 </motion.button>
-              </Link>
+              )}
+              <h1 className="text-2xl md:text-3xl font-bold bg-gradient-to-r from-blue-400 to-purple-500 bg-clip-text text-transparent">
+                {currentPath[currentPath.length - 1] === 'root' ? 'Downloads' : currentPath[currentPath.length - 1]}
+              </h1>
             </div>
-            
-            {/* Breadcrumbs */}
-            {currentFolder !== 'root' && (
-              <div className="flex items-center mb-4 text-sm text-gray-400">
-                <span 
-                  className="cursor-pointer hover:text-blue-300"
-                  onClick={() => setCurrentFolder('root')}
-                >
-                  Home
-                </span>
-                {getBreadcrumbPath().map((item, index, array) => (
-                  <React.Fragment key={index}>
-                    <span className="mx-2">/</span>
-                    <span 
-                      className={`${index === array.length - 1 ? 'text-blue-300' : 'cursor-pointer hover:text-blue-300'}`}
-                      onClick={() => {
-                        if (index < array.length - 1) {
-                          setCurrentFolder(item);
-                        }
-                      }}
-                    >
-                      {item}
-                    </span>
-                  </React.Fragment>
-                ))}
-              </div>
-            )}
-            
-            {/* Search bar */}
-            <div className="relative">
-              <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                <FaSearch className="text-gray-400" />
-              </div>
-              <input
-                type="text"
-                className="bg-gray-800/50 border border-gray-700/50 text-white rounded-lg block w-full pl-10 p-2.5 focus:outline-none focus:ring-2 focus:ring-blue-500/50"
-                placeholder="Search files..."
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-              />
+            <Link to="/">
+              <motion.button
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                className="p-2 rounded-lg bg-white/5 hover:bg-white/10 transition-colors"
+              >
+                <FaHome />
+              </motion.button>
+            </Link>
+          </div>
+
+          {/* Breadcrumbs */}
+          {renderBreadcrumbs()}
+
+          {/* Search Bar */}
+          <div className="relative max-w-md">
+            <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+              <FaSearch className="text-gray-400" />
             </div>
+            <input
+              type="text"
+              className="w-full bg-white/5 border border-white/10 rounded-lg pl-10 pr-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500/50"
+              placeholder="Search files and folders..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+            />
           </div>
-          
-          {/* File list */}
-          <div className="space-y-2">
-            {renderFiles(getCurrentFolderData())}
-          </div>
+        </motion.div>
+
+        {/* Content */}
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.2 }}
+          className="bg-white/5 backdrop-blur-sm rounded-lg p-4"
+        >
+          {renderContent()}
         </motion.div>
       </div>
 
@@ -432,19 +337,17 @@ const Downloads = () => {
               initial={{ scale: 0.8, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               exit={{ scale: 0.8, opacity: 0 }}
-              className="bg-gradient-to-br from-gray-800 to-gray-900 rounded-xl p-8 w-full max-w-md border border-gray-700/30 shadow-2xl"
+              className="bg-white/5 backdrop-blur-sm rounded-lg p-6 w-full max-w-md border border-white/10"
             >
               <div className="text-center">
-                <div className="w-16 h-16 mx-auto mb-4 flex items-center justify-center rounded-full bg-blue-500/20">
+                <div className="w-12 h-12 mx-auto mb-4 flex items-center justify-center rounded-lg bg-blue-500/20">
                   {getFileIcon(downloadingFile.name)}
                 </div>
                 
-                <h3 className="text-2xl font-bold mb-1 text-white">
-                  {downloadingFile.isExternal ? 'Opening Link' : 'Downloading'}
-                </h3>
-                <p className="text-blue-300 mb-6">{downloadingFile.name}</p>
+                <h3 className="text-xl font-semibold mb-2 text-white">Downloading</h3>
+                <p className="text-blue-400 mb-4">{downloadingFile.name}</p>
                 
-                <div className="w-full h-2 bg-gray-700 rounded-full mb-6 overflow-hidden">
+                <div className="w-full h-1.5 bg-white/10 rounded-full overflow-hidden">
                   <motion.div
                     initial={{ width: 0 }}
                     animate={{ width: '100%' }}
@@ -452,23 +355,6 @@ const Downloads = () => {
                     className="h-full bg-gradient-to-r from-blue-500 to-purple-500 rounded-full"
                   ></motion.div>
                 </div>
-                
-                <motion.div
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1, transition: { delay: 1.8 } }}
-                  className="flex justify-center"
-                >
-                  <motion.div 
-                    animate={{ 
-                      scale: [1, 1.2, 1],
-                      transition: { repeat: Infinity, duration: 2 }
-                    }}
-                    className="flex items-center bg-green-500/20 text-green-400 px-4 py-2 rounded-full"
-                  >
-                    <FaCheck className="mr-2" />
-                    <span>Almost done...</span>
-                  </motion.div>
-                </motion.div>
               </div>
             </motion.div>
           </motion.div>

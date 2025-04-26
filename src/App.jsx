@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
 
-import LoadingPage from './utils/LoadingPage';
+import LoadingPage from './components/LoadingPage';
 import NavbarOther from './components/NavbarOther';
 import Navbar from './components/Navbar';
 import FadeUp from './components/FadeUp';

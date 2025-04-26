@@ -14,6 +14,36 @@ const ProjectCard = ({ project, index, priority = false }) => {
   const isCardInView = useInView(cardRef, { once: false, amount: 0.2 });
   const [isHovered, setIsHovered] = useState(false);
 
+  // Card variants with subtle animations
+  const cardVariants = {
+    initial: {
+      scale: 1,
+      rotate: 0,
+      boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)'
+    },
+    hover: {
+      scale: 1.03,
+      rotate: 0.5,
+      boxShadow: '0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)',
+      transition: {
+        duration: 0.3,
+        type: "spring",
+        stiffness: 300,
+        damping: 15
+      }
+    },
+    tap: {
+      scale: 0.98,
+      rotate: -1,
+      transition: {
+        duration: 0.3,
+        type: "spring",
+        stiffness: 300,
+        damping: 15
+      }
+    },
+  };
+
   // Create a YouTube embed URL that shows thumbnail and requires click to play
   const getYouTubeEmbedUrl = (url) => {
     if (!url) return null;
@@ -27,143 +57,139 @@ const ProjectCard = ({ project, index, priority = false }) => {
   return (
     <motion.div
       ref={cardRef}
-      initial={{ opacity: 0, y: 30 }}
-      animate={isCardInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 30 }}
-      transition={{ duration: 0.6, delay: index * 0.1 }}
-      className={`w-full ${priority ? 'col-span-1 md:col-span-2' : ''}`}
+      variants={cardVariants}
+      initial="initial"
+      whileHover="hover"
+      whileTap="tap"
+      className={`w-full ${priority ? 'col-span-1 md:col-span-2' : ''} bg-gradient-to-br from-gray-800/60 to-gray-900/60 backdrop-blur-md border border-gray-700/30 rounded-xl overflow-hidden`}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
-      <motion.div
-        className="h-full overflow-hidden rounded-xl bg-gradient-to-br from-gray-800/80 to-gray-900/80 backdrop-blur-sm border border-gray-700/50 hover:border-blue-500/30 transition-all duration-300"
-        whileHover={{ y: -8, boxShadow: "0 20px 40px -15px rgba(0, 0, 0, 0.3)" }}
-      >
-        {/* Project Image/Video with Overlay */}
-        <div className="relative h-56 overflow-hidden">
-          {project.isVideoEdit ? (
-            // For video editing projects, show the embedded YouTube player with thumbnail
-            <div className="w-full h-full bg-black">
-              <iframe
-                src={getYouTubeEmbedUrl(project.videoUrl)}
-                className="w-full h-full"
-                frameBorder="0"
-                title={project.title}
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                allowFullScreen
-              />
-            </div>
-          ) : (
-            // For development projects, show the image with hover overlay
-            <>
-              <motion.div
-                className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-black/70 z-10"
-                animate={{ opacity: isHovered ? 0.9 : 0.6 }}
-              />
-              <motion.img
-                src={project.image}
-                alt={project.title}
-                className="object-cover w-full h-full"
-                animate={{ scale: isHovered ? 1.05 : 1 }}
-                transition={{ duration: 0.4 }}
-              />
-
-              {/* Hover Actions */}
-              <motion.div
-                className="absolute inset-0 z-20 flex items-center justify-center opacity-0 gap-4"
-                animate={{ opacity: isHovered ? 1 : 0 }}
-                transition={{ duration: 0.3 }}
-              >
-                {project.github && (
-                  <motion.a
-                    href={project.github}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="flex items-center justify-center w-12 h-12 text-white bg-black/70 backdrop-blur-md rounded-full hover:bg-black/90 transition-all"
-                    whileHover={{ scale: 1.1 }}
-                    whileTap={{ scale: 0.95 }}
-                  >
-                    <FaGithub className="w-5 h-5" />
-                  </motion.a>
-                )}
-
-                {project.link && (
-                  <motion.a
-                    href={project.link}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="flex items-center justify-center w-12 h-12 text-white bg-blue-600/90 backdrop-blur-md rounded-full hover:bg-blue-600 transition-all"
-                    whileHover={{ scale: 1.1 }}
-                    whileTap={{ scale: 0.95 }}
-                  >
-                    <FaExternalLinkAlt className="w-5 h-5" />
-                  </motion.a>
-                )}
-              </motion.div>
-            </>
-          )}
-        </div>
-
-        {/* Project Info */}
-        <div className="p-6">
-          <div className="flex justify-between items-start mb-2">
-            <h3 className="text-xl font-bold text-white">{project.title}</h3>
-            <div className="flex items-center text-xs text-gray-400">
-              <FaCalendarAlt className="mr-1" />
-              <span>{project.date}</span>
-            </div>
+      {/* Project Image/Video with Overlay */}
+      <div className="relative h-56 overflow-hidden">
+        {project.isVideoEdit ? (
+          // For video editing projects, show the embedded YouTube player with thumbnail
+          <div className="w-full h-full bg-black">
+            <iframe
+              src={getYouTubeEmbedUrl(project.videoUrl)}
+              className="w-full h-full"
+              frameBorder="0"
+              title={project.title}
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              allowFullScreen
+            />
           </div>
+        ) : (
+          // For development projects, show the image with hover overlay
+          <>
+            <motion.div
+              className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-black/70 z-10"
+              animate={{ opacity: isHovered ? 0.9 : 0.6 }}
+            />
+            <motion.img
+              src={project.image}
+              alt={project.title}
+              className="object-cover w-full h-full"
+              animate={{ scale: isHovered ? 1.05 : 1 }}
+              transition={{ duration: 0.4 }}
+            />
 
-          <p className="text-gray-300 text-sm mb-4">{project.description}</p>
-
-          {/* Tech Tags */}
-          <div className="flex flex-wrap gap-2 mb-4">
-            {project.technologies.map((tech, index) => (
-              <span
-                key={index}
-                className="text-xs px-3 py-1 rounded-full 
-                  bg-gradient-to-r from-blue-500/10 to-purple-500/10 border border-blue-400/20
-                  text-blue-300"
-              >
-                {tech}
-              </span>
-            ))}
-          </div>
-
-          <div className="flex justify-between items-center">
-            <span className="text-sm text-gray-400 flex items-center">
-              {project.isVideoEdit ? (
-                <><FaFilm className="mr-2" /> Video Edit</>
-              ) : (
-                <><FaCode className="mr-2" /> {project.type}</>
-              )}
-            </span>
-
-            {project.status && (
-              <span className={`text-xs px-2 py-1 rounded-full ${project.status === 'Completed' ? 'bg-green-500/20 text-green-300' :
-                  project.status === 'In Progress' ? 'bg-yellow-500/20 text-yellow-300' :
-                    'bg-blue-500/20 text-blue-300'
-                }`}>
-                {project.status}
-              </span>
-            )}
-          </div>
-
-          {/* YouTube Link Button for Video Projects */}
-          {project.isVideoEdit && project.youtubeLink && (
-            <motion.a
-              href={project.youtubeLink}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex items-center justify-center mt-4 py-2 px-4 rounded-md bg-red-600/20 hover:bg-red-600/30 text-red-300 text-sm transition-all"
-              whileHover={{ scale: 1.02 }}
-              whileTap={{ scale: 0.98 }}
+            {/* Hover Actions */}
+            <motion.div
+              className="absolute inset-0 z-20 flex items-center justify-center opacity-0 gap-4"
+              animate={{ opacity: isHovered ? 1 : 0 }}
+              transition={{ duration: 0.3 }}
             >
-              <FaYoutube className="mr-2" />
-              Watch on YouTube
-            </motion.a>
+              {project.github && (
+                <motion.a
+                  href={project.github}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center justify-center w-12 h-12 text-white bg-black/70 backdrop-blur-md rounded-full hover:bg-black/90 transition-all"
+                  whileHover={{ scale: 1.1 }}
+                  whileTap={{ scale: 0.95 }}
+                >
+                  <FaGithub className="w-5 h-5" />
+                </motion.a>
+              )}
+
+              {project.link && (
+                <motion.a
+                  href={project.link}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center justify-center w-12 h-12 text-white bg-blue-600/90 backdrop-blur-md rounded-full hover:bg-blue-600 transition-all"
+                  whileHover={{ scale: 1.1 }}
+                  whileTap={{ scale: 0.95 }}
+                >
+                  <FaExternalLinkAlt className="w-5 h-5" />
+                </motion.a>
+              )}
+            </motion.div>
+          </>
+        )}
+      </div>
+
+      {/* Project Info */}
+      <div className="p-6">
+        <div className="flex justify-between items-start mb-2">
+          <h3 className="text-xl font-bold text-white">{project.title}</h3>
+          <div className="flex items-center text-xs text-gray-400">
+            <FaCalendarAlt className="mr-1" />
+            <span>{project.date}</span>
+          </div>
+        </div>
+
+        <p className="text-gray-300 text-sm mb-4">{project.description}</p>
+
+        {/* Tech Tags */}
+        <div className="flex flex-wrap gap-2 mb-4">
+          {project.technologies.map((tech, index) => (
+            <span
+              key={index}
+              className="text-xs px-3 py-1 rounded-full 
+                bg-gradient-to-r from-blue-500/10 to-purple-500/10 border border-blue-400/20
+                text-blue-300"
+            >
+              {tech}
+            </span>
+          ))}
+        </div>
+
+        <div className="flex justify-between items-center">
+          <span className="text-sm text-gray-400 flex items-center">
+            {project.isVideoEdit ? (
+              <><FaFilm className="mr-2" /> Video Edit</>
+            ) : (
+              <><FaCode className="mr-2" /> {project.type}</>
+            )}
+          </span>
+
+          {project.status && (
+            <span className={`text-xs px-2 py-1 rounded-full ${project.status === 'Completed' ? 'bg-green-500/20 text-green-300' :
+                project.status === 'In Progress' ? 'bg-yellow-500/20 text-yellow-300' :
+                  'bg-blue-500/20 text-blue-300'
+            }`}>
+              {project.status}
+            </span>
           )}
         </div>
-      </motion.div>
+
+        {/* YouTube Link Button for Video Projects */}
+        {project.isVideoEdit && project.youtubeLink && (
+          <motion.a
+            href={project.youtubeLink}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex items-center justify-center mt-4 py-2 px-4 rounded-md bg-red-600/20 hover:bg-red-600/30 text-red-300 text-sm transition-all"
+            whileHover={{ scale: 1.02 }}
+            whileTap={{ scale: 0.98 }}
+          >
+            <FaYoutube className="mr-2" />
+            Watch on YouTube
+          </motion.a>
+        )}
+      </div>
     </motion.div>
   );
 };
@@ -175,6 +201,18 @@ const MoreProjects = () => {
   const isHeaderInView = useInView(headerRef, { once: false, amount: 0.3 });
   const isDevSectionInView = useInView(devSectionRef, { once: false, amount: 0.2 });
   const isVideoSectionInView = useInView(videoSectionRef, { once: false, amount: 0.2 });
+
+  const sectionVariants = {
+    hidden: { opacity: 0, y: 30 },
+    visible: { 
+      opacity: 1, 
+      y: 0,
+      transition: {
+        duration: 0.6,
+        ease: "easeOut"
+      }
+    }
+  };
 
   // These are the same 4 projects from the main Projects component
   const projects = [
@@ -292,57 +330,59 @@ const MoreProjects = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-black to-gray-900 text-white pt-20 pb-16">
-      {/* Header */}
-      <div ref={headerRef} className="container mx-auto px-4 py-12 text-center">
-        <motion.h1
-          className="text-3xl md:text-5xl font-bold mb-4"
-          initial={{ opacity: 0, y: -20 }}
-          animate={isHeaderInView ? { opacity: 1, y: 0 } : { opacity: 0, y: -20 }}
-          transition={{ duration: 0.6 }}
-        >
-          <span className="bg-gradient-to-r from-blue-400 via-purple-500 to-pink-500 bg-clip-text text-transparent">
-            Project Archive
-          </span>
-        </motion.h1>
-        <motion.p
-          className="text-gray-400 max-w-2xl mx-auto"
-          initial={{ opacity: 0, y: 20 }}
-          animate={isHeaderInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
-          transition={{ duration: 0.6, delay: 0.2 }}
-        >
-          Explore my complete collection of projects, including development work,
-          video editing, and experiments I've created throughout my journey.
-        </motion.p>
+    <div className="min-h-screen bg-gradient-to-b from-gray-900 to-black text-white overflow-hidden">
+      {/* Animated background particles */}
+      <div className="fixed inset-0 z-0">
+        <div className="absolute top-20 -left-20 w-80 h-80 rounded-full bg-blue-500/10 blur-3xl"></div>
+        <div className="absolute bottom-40 -right-20 w-96 h-96 rounded-full bg-purple-500/10 blur-3xl"></div>
+        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-full h-full bg-gradient-to-b from-transparent to-black/80 z-0"></div>
       </div>
 
-      {/* Development Projects Section */}
-      <motion.section
-        ref={devSectionRef}
-        className="container mx-auto px-4 py-12"
-        initial={{ opacity: 0 }}
-        animate={isDevSectionInView ? { opacity: 1 } : { opacity: 0 }}
-        transition={{ duration: 0.8 }}
-      >
+      <div className="relative z-10 pt-32 pb-16 container mx-auto px-4">
+        {/* Header */}
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={isDevSectionInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
-          transition={{ duration: 0.5 }}
-          className="mb-10"
+          ref={headerRef}
+          initial={{ opacity: 0, y: 30 }}
+          animate={isHeaderInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 30 }}
+          transition={{ duration: 0.7 }}
+          className="text-center mb-16"
         >
-          <h2 className="text-3xl font-bold mb-4 text-white inline-flex items-center">
-            <FaCode className="mr-3 text-blue-400" />
-            <span className="bg-gradient-to-r from-blue-400 to-blue-600 bg-clip-text text-transparent">
-              Development Projects
+          <motion.h1 
+            className="text-5xl md:text-6xl font-bold mb-6 relative inline-block"
+          >
+            <span className="bg-gradient-to-r from-blue-400 via-purple-600 to-pink-500 bg-clip-text text-transparent">
+              Project Archive
             </span>
-          </h2>
-          <p className="text-gray-300">
-            Software development projects spanning web applications, tools, and platforms.
-          </p>
+          </motion.h1>
+          
+          <motion.p 
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.3, duration: 0.7 }}
+            className="text-xl text-gray-300 max-w-3xl mx-auto"
+          >
+            Explore my complete collection of projects, including development work,
+            video editing, and experiments I've created throughout my journey.
+          </motion.p>
         </motion.div>
 
-        <div className="max-w-6xl mx-auto">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-16">
+        {/* Development Projects Section */}
+        <motion.section
+          ref={devSectionRef}
+          variants={sectionVariants}
+          initial="hidden"
+          animate={isDevSectionInView ? "visible" : "hidden"}
+          className="mb-20"
+        >
+          <div className="text-center mb-10">
+            <h2 className="text-3xl font-bold inline-block relative">
+              <span className="bg-gradient-to-r from-blue-400 via-purple-500 to-pink-500 bg-clip-text text-transparent">
+                Development Projects
+              </span>
+            </h2>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-5xl mx-auto">
             {projects.map((project, index) => (
               <ProjectCard
                 key={project.id}
@@ -352,37 +392,27 @@ const MoreProjects = () => {
               />
             ))}
           </div>
-        </div>
-      </motion.section>
+        </motion.section>
 
-      {/* Video Editing Projects Section */}
-      <motion.section
-        ref={videoSectionRef}
-        className="container mx-auto px-4 py-12"
-        initial={{ opacity: 0 }}
-        animate={isVideoSectionInView ? { opacity: 1 } : { opacity: 0 }}
-        transition={{ duration: 0.8 }}
-        id="edit"
-      >
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={isVideoSectionInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
-          transition={{ duration: 0.5 }}
-          className="mb-10"
+        {/* Video Editing Projects Section */}
+        <motion.section
+          ref={videoSectionRef}
+          variants={sectionVariants}
+          initial="hidden"
+          animate={isVideoSectionInView ? "visible" : "hidden"}
+          transition={{ delay: 0.2 }}
+          className="mb-20"
+          id="edit"
         >
-          <h2 className="text-3xl font-bold mb-4 text-white inline-flex items-center">
-            <FaFilm className="mr-3 text-red-400" />
-            <span className="bg-gradient-to-r from-red-400 to-pink-600 bg-clip-text text-transparent">
-              Video Editing Journey
-            </span>
-          </h2>
-          <p className="text-gray-300">
-            Creative video edits showcasing my skills in motion graphics, visual effects, and storytelling.
-          </p>
-        </motion.div>
+          <div className="text-center mb-10">
+            <h2 className="text-3xl font-bold inline-block relative">
+              <span className="bg-gradient-to-r from-blue-400 via-purple-500 to-pink-500 bg-clip-text text-transparent">
+                Video Editing Journey
+              </span>
+            </h2>
+          </div>
 
-        <div className="max-w-6xl mx-auto">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-5xl mx-auto">
             {videoProjects.map((project, index) => (
               <ProjectCard
                 key={project.id}
@@ -391,32 +421,37 @@ const MoreProjects = () => {
               />
             ))}
           </div>
-        </div>
-      </motion.section>
+        </motion.section>
 
-      {/* Back to Home */}
-      <div className="container mx-auto px-4 py-12 text-center">
-        <Link to="/">
-          <motion.button
-            className="px-6 py-3 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-full hover:from-blue-700 hover:to-purple-700 transition-all"
-            whileHover={{ scale: 1.05, boxShadow: "0 10px 15px -3px rgba(0, 0, 0, 0.3)" }}
-            whileTap={{ scale: 0.95 }}
-            style={{ marginRight: "1rem" }}
-          >
-            <FaArrowLeft className="inline mr-2" />
-            Back to Home
-          </motion.button>
-        </Link>
-        <Link to="/downloads">
-          <motion.button
-            className="px-6 py-3 bg-gray-800 text-white rounded-full hover:bg-gray-700 transition-all"
-            whileHover={{ scale: 1.05, boxShadow: "0 10px 15px -3px rgba(0, 0, 0, 0.3)" }}
-            whileTap={{ scale: 0.95 }}
-          >
-            <FaDownload className="inline mr-2" />
-            Downloads
-          </motion.button>
-        </Link>
+        {/* Action buttons */}
+        <motion.div 
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.7, duration: 0.5 }}
+          className="flex flex-wrap justify-center gap-6 mt-16"
+        >
+          <Link to="/">
+            <motion.div
+              whileHover={{ scale: 1.05, y: -5 }}
+              whileTap={{ scale: 0.95 }}
+              className="px-8 py-3 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-500 hover:to-blue-600 text-white rounded-full flex items-center shadow-lg shadow-blue-600/20"
+            >
+              <FaHome className="mr-2" />
+              Back to Home
+            </motion.div>
+          </Link>
+          
+          <Link to="/downloads">
+            <motion.div
+              whileHover={{ scale: 1.05, y: -5 }}
+              whileTap={{ scale: 0.95 }}
+              className="px-8 py-3 bg-gradient-to-r from-purple-600 to-purple-700 hover:from-purple-500 hover:to-purple-600 text-white rounded-full flex items-center shadow-lg shadow-purple-600/20"
+            >
+              <FaDownload className="mr-2" />
+              Downloads
+            </motion.div>
+          </Link>
+        </motion.div>
       </div>
     </div>
   );
